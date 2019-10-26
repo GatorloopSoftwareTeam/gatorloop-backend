@@ -1,12 +1,26 @@
-const express = require("express");
-const config = require("./config.json");
+const express = require('express');
+const bodyParser = require('body-parser');
 
-var server = express();
+const config = require('./Config/config.json');
+const database = require('./Database/database.js');
+const apiRoutes = require('./Route/ApiRoutes.js');
 
-server.listen(config.port, "localhost", () => {
+
+let app = express();
+
+app.listen(config.port, "localhost", () => {
   console.log(`Now listening on port ${config.port}`);
 });
 
-server.get('/', function (req, res) {
+database.connect();
+
+// configure app to use bodyParser()
+// this will let us get the data from a POST
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+app.use('/api', apiRoutes);
+
+app.get('/', function (req, res) {
   res.json({message: "Welcome to the Gatorloop backend."});
-})
+});
