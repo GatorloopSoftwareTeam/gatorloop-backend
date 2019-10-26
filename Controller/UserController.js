@@ -8,18 +8,18 @@ exports.getAll = (req, res) => {
 };
 
 exports.get = (req, res) => {
-    console.log(`API GET request called for ${req.params.id}`);
-    userDAO.getUser(req.params.id, result => {
+    console.log(`API GET request called for ${req.params.email}`);
+    userDAO.getUser(req.params.email, result => {
         if (result) {
             res.json(result);
         } else {
-            res.status(404).send(`User with email ${req.params.id} not found`);
+            res.status(404).send(`User with email ${req.params.email} not found`);
         }
     });
 };
 
 exports.create = (req, res) => {
-    const params = req.query;
+    const params = req.body;
 
     //assume parameters have been sanitized on client side
 
