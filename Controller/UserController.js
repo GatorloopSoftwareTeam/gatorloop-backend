@@ -2,23 +2,35 @@ const userDAO = require("../DAO/UserDAO");
 
 exports.getAll = (req, res) => {
     console.log("API GET request called for all users");
-    userDAO.getAllUsers(result => {
-        res.send(result);
+
+    userDAO.getAllUsers().then(function (users) {
+        res.send(users);
+    }).catch(function (err) {
+        console.log("error getting all users: ", err);
+        res.status(500).json({error: 'error retrieving records from database'});
     });
 };
 
 exports.get = (req, res) => {
     console.log(`API GET request called for ${req.params.email}`);
-    userDAO.getUser(req.params.email, result => {
-        if (result) {
-            res.json(result);
+
+    userDAO.getUser(req.params.email).then(function (user) {
+        if (user) {
+            console.log(`Successfully retrieved ${req.params.email} from the database`);
+            res.json(user);
         } else {
+            console.log(`Failed to retrieve ${req.params.email} from database; User does not exist`);
             res.status(404).json({error: `User with email ${req.params.email} not found`});
         }
+    }).catch(function (err) {
+        console.log("error getting user: ", err);
+        res.status(500).json({error: 'error retrieving record from database'});
     });
 };
 
 exports.create = (req, res) => {
+    console.log(`API POST request called for 'create user'`);
+
     const params = req.body;
 
     //assume parameters have been sanitized on client side
