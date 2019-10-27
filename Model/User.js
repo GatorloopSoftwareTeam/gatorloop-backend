@@ -18,11 +18,11 @@ const Schema = new mongoose.Schema({
         type: String,
         default: "user",
         enum: ["admin", "user"]
-    }
-    /*purchase_orders: [{
+    },
+    purchase_orders: [{
           type: mongoose.Schema.Types.ObjectId,
           ref: 'PurchaseOrder'
-    }]*/
+    }]
 });
 
 exports.Model = mongoose.model("User", Schema);

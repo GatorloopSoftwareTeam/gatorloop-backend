@@ -21,7 +21,7 @@ Note: The sample database url in the config file will not run because the passwo
 
 Current API endpoints for manipulating the database. Parameters should be passed as a JSON object in the body of the request.
 
-##### User
+#### User
 
 | HTTP VERB | URI                 | Description                       | Parameters                      |
 | ---       | ---                 | ---                               | ---                             |
@@ -39,7 +39,7 @@ Coming soon!
 
 Each type of object stored in the database is defined by a schema (like a blueprint). For more information, see the mongoose documentation on the topic [here](https://mongoosejs.com/docs/guide.html).
 
-##### User
+#### User
 
 ```
 {
@@ -64,6 +64,6 @@ Each type of object stored in the database is defined by a schema (like a bluepr
 }
 ```
 
-##### Purchase Order
+#### Purchase Order
 
-##### Invite
+#### Invite
