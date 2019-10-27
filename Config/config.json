@@ -2,11 +2,6 @@
   "port": 8080,
   "development": {
     "database": {
-      "username": "db_admin",
-      "password": "<password>",
-      "host": "gatorloop-backend-testing-ahoy2.mongodb.net",
-      "database": "test",
-      "parameters": "retryWrites=true&w=majority",
       "url": "mongodb+srv://db_admin:<password>@gatorloop-backend-testing-ahoy2.mongodb.net/test?retryWrites=true&w=majority"
     },
     "users": {
