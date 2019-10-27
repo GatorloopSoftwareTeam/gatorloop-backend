@@ -13,7 +13,7 @@ exports.get = (req, res) => {
         if (result) {
             res.json(result);
         } else {
-            res.status(404).send(`User with email ${req.params.email} not found`);
+            res.status(404).json({error: `User with email ${req.params.email} not found`});
         }
     });
 };
@@ -36,6 +36,32 @@ exports.create = (req, res) => {
                     res.status(500).json(err);
                 }
             });
+    } else {
+        res.status(404).send("Insufficient parameters provided");
+    }
+};
+
+exports.update = (req, res) => {
+    console.log(`API PUT request called for ${req.params.email}`);
+
+    const params = req.body;
+
+    //assume parameters have been sanitized on client side
+
+    if (Object.keys(params).length === 3) {
+        userDAO.updateUser(req.params.email, params["name"], params["email"], params["password"]).then(function(updatedUser) {
+            console.log('User '+updatedUser.email+' Updated!', updatedUser);
+            res.json(updatedUser);
+        }).catch(function (err) {
+            console.log("failed to update record");
+            if (err.name === 'ValidationError') {
+                console.error('Error Validating!', err);
+                res.status(422).json(err);
+            } else {
+                console.error(err);
+                res.status(500).json({error: "failed to update record"});
+            }
+        });
     } else {
         res.status(404).send("Insufficient parameters provided");
     }
