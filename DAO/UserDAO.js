@@ -14,12 +14,12 @@ exports.createUser = (
 };
 
 exports.getAllUsers = callback => {
-  return User.find({}).exec();
+    return User.find({}).exec();
 };
 
 //get user by email
 exports.getUser = (email_, callback) => {
-  return User.findOne({ email: email_ });
+    return User.findOne({ email: email_ });
 };
 
 exports.updateUser = (email_, name_, new_email_, password_) => {
@@ -30,11 +30,11 @@ exports.updateUser = (email_, name_, new_email_, password_) => {
             user.email = new_email_;
             resolve(user.save());
         }).catch(function (err){
-          reject(err);
+            reject(err);
         });
     })
 };
 
 exports.deleteUser = (email_) => {
-  return User.remove({email: email_}, {single: true}).exec();
+    return User.remove({email: email_}, {single: true}).exec();
 };
