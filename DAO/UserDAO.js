@@ -13,12 +13,12 @@ exports.createUser = (
     return newUser.save();
 };
 
-exports.getAllUsers = callback => {
+exports.getAllUsers = () => {
     return User.find({}).exec();
 };
 
 //get user by email
-exports.getUser = (email_, callback) => {
+exports.getUser = (email_) => {
     return User.findOne({ email: email_ });
 };
 
