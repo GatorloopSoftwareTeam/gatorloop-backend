@@ -78,3 +78,23 @@ exports.update = (req, res) => {
         res.status(404).send("Insufficient parameters provided");
     }
 };
+
+exports.delete = (req, res) => {
+    console.log(`API DELETE request called for ${req.params.email}`);
+
+    userDAO.deleteUser(req.params.email).then(function (result) {
+        if (result.deletedCount === 0) {
+            //success
+            res.status(404).json({error: "could not find record to remove for email: "+req.params.email});
+        } else if (result.deletedCount === 1) {
+            //success
+            res.json({message: "successfully removed record",email: req.params.email})
+        } else {
+            //critical error
+            res.status(500).json({error: "critical server error"});
+        }
+    }).catch(function (err) {
+        console.log("failed to remove record: ", err);
+        res.status(500).json({error: "failed to remove record from database"});
+    })
+};
