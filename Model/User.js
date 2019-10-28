@@ -17,12 +17,21 @@ const Schema = new mongoose.Schema({
     role: {
         type: String,
         default: "user",
-        enum: ["admin", "user"]
+        enum: ["admin", "manager", "user"]
     },
     purchase_orders: [{
           type: mongoose.Schema.Types.ObjectId,
           ref: 'PurchaseOrder'
-    }]
+    }],
+    subteam: {
+        type: String,
+        enum: [],
+        default: "unassigned"
+    },
+    date_created: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 exports.Model = mongoose.model("User", Schema);

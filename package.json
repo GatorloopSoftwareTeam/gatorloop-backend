@@ -5,12 +5,23 @@
   "main": "server.js",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "connect-ensure-login": "^0.1.1",
+    "connect-flash": "^0.1.1",
     "express": "^4.17.1",
-    "mongoose": "^5.7.7"
+    "express-session": "^1.17.0",
+    "mongoose": "^5.7.7",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "ejs": "^2.6.2"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/GatorloopSoftwareTeam/gatorloop-backend.git"
   },
   "author": "Noah Kurrack",
   "license": "ISC"

@@ -19,21 +19,34 @@ Note: The sample database url in the config file will not run because the passwo
 
 ### API
 
-Current API endpoints for manipulating the database. Parameters should be passed as a JSON object in the body of the request.
+Current API endpoints for manipulating the database. Parameters should be passed as a JSON object in the body of the request. Most requests must be sent from authenticated through sessions (see next section).
 
 #### User
 
-| HTTP VERB | URI                 | Description                       | Parameters                      |
-| ---       | ---                 | ---                               | ---                             |
-| GET       | `/api/user`         | Get all users                     | none                            |
-| GET       | `/api/user/:email`  | Get user with specified email     | none                            |
-| PUT       | `/api/user/:email`  | Update user with specified email  | name, email (new), password     |
-| POST      | `/api/user/`        | Create new user                   | name, email, password           |
-| DELETE    | `/api/user/:email`  | Delete user with specified email  | none                            |
+| HTTP VERB | URI                        | Description                       | Parameters                      | Permissions                                |
+| ---       | ---                        | ---                               | ---                             | ---                                        |
+| GET       | `/api/user`                | Get all users                     | none                            | only admin                                 |
+| GET       | `/api/user/:email`         | Get user with specified email     | none                            | user & manager -> own info; admin -> all   |
+| PUT       | `/api/user/:email`         | Update user with specified email  | name, email (new), password     | user & manager -> own info; admin -> all   |
+| POST      | `/api/user/`               | Create new user                   | name, email, password           | invite code needed (no auth needed)        |
+| DELETE    | `/api/user/:email`         | Delete user with specified email  | none                            | user & manager -> own info; admin -> all   |
+| GET       | `/api/user/:email/promote` | Increase user's permissions       | none                            | sender can promote any other to own level  |
 
 ### Authorization
 
-Coming soon!
+| HTTP VERB | URI                        | Description                       | Parameters                      | Permissions        |
+| ---       | ---                        | ---                               | ---                             | ---                |
+| GET       | `/auth/login`              | Show login screen                 | none                            | no auth needed     |
+| POST      | `/auth/login`              | Authenticate credentials          | username, password              | no auth needed     |
+| GET       | `/auth/logout`             | End authenticated session         | none                            | no auth needed     |
+
+### Views
+
+| URI       | Description                        | Access             |
+| ---       | ---                                | ---                |
+| /         | redirect to home                   | all                |
+| /home     | default page with welcome message  | all                |
+| /profile  | shows user info                    | authenticated user |
 
 ### Schemas
 
@@ -44,26 +57,72 @@ Each type of object stored in the database is defined by a schema (like a bluepr
 ```
 {
        name: {
-           type: String,
-           trim: true
-       },
-       email: {
-           type: String,
-           unique: true,
-           trim: true
-       },
-       password: {
-           type: String,
-           minlength: 8
-       },
-       role: {
-           type: String,
-           default: "user",
-           enum: ["admin", "user"]
-       }
+               type: String,
+               trim: true
+           },
+           email: {
+               type: String,
+               unique: true,
+               trim: true
+           },
+           password: {
+               type: String,
+               minlength: 8
+           },
+           role: {
+               type: String,
+               default: "user",
+               enum: ["admin", "manager", "user"]
+           },
+           purchase_orders: [{
+                 type: mongoose.Schema.Types.ObjectId,
+                 ref: 'PurchaseOrder'
+           }],
+           subteam: {
+               type: String,
+               enum: [],
+               default: "unassigned"
+           },
+           date_created: {
+               type: Date,
+               default: Date.now
+           }
 }
 ```
 
 #### Purchase Order
+
+```
+{
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    date_created: {
+        type: Date,
+        default: Date.now
+    },
+    po_number: {
+        type: Number,
+        unique: true
+    },
+    description: {
+        type: String
+    },
+    file_location: {
+        type: String,
+        unique: true
+    },
+    status: {
+        type: String,
+        enum: ["New", "Seen", "Submitted", "Approved", "Ordered", "Delivered"],
+        default: "New"
+    },
+    last_updated: {
+        type: Date,
+        default: Date.now
+    }
+}
+```
 
 #### Invite
