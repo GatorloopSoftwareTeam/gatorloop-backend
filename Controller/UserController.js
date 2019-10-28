@@ -5,6 +5,7 @@ exports.getAll = (req, res) => {
 
     if (!req.user) {
         res.status(401).json({error: "you are not authorized to make this request; please login"});
+        return;
     }
 
     if (req.isAuthenticated()) {
@@ -117,4 +118,11 @@ exports.delete = (req, res) => {
         console.log("failed to remove record: ", err);
         res.status(500).json({error: "failed to remove record from database"});
     })
+};
+
+exports.delete = (req, res) => {
+    console.log(`API GET request called to promote ${req.params.email}`);
+
+    //todo: can only promote specified user to caller's own role
+
 };

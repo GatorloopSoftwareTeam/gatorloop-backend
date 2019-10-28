@@ -10,6 +10,7 @@ const config = require('./Config/config.json');
 const database = require('./Database/database.js');
 const apiRoutes = require('./Route/ApiRoutes');
 const authRoutes = require('./Route/AuthRoutes');
+const viewRoutes = require('./Route/ViewRoutes')
 
 const userDAO = require('./DAO/UserDAO');
 
@@ -70,6 +71,7 @@ passport.deserializeUser(function(email, done) {
 
 app.use('/api', apiRoutes);
 app.use('/auth', authRoutes);
+app.use('/', viewRoutes);
 
 app.get('/', function (req, res) {
     res.json({message: "Welcome to the Gatorloop backend."});
