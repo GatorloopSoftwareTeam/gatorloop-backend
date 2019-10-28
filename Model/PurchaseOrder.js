@@ -24,6 +24,10 @@ const Schema = new mongoose.Schema({
         type: String,
         enum: ["New", "Seen", "Submitted", "Approved", "Ordered", "Delivered"],
         default: "New"
+    },
+    last_updated: {
+        type: Date,
+        default: Date.now
     }
 });
 

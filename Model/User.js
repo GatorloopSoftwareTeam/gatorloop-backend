@@ -22,7 +22,16 @@ const Schema = new mongoose.Schema({
     purchase_orders: [{
           type: mongoose.Schema.Types.ObjectId,
           ref: 'PurchaseOrder'
-    }]
+    }],
+    subteam: {
+        type: String,
+        enum: [],
+        default: "unassigned"
+    },
+    date_created: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 exports.Model = mongoose.model("User", Schema);

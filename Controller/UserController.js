@@ -3,16 +3,30 @@ const userDAO = require("../DAO/UserDAO");
 exports.getAll = (req, res) => {
     console.log("API GET request called for all users");
 
-    userDAO.getAllUsers().then(function (users) {
-        res.send(users);
-    }).catch(function (err) {
-        console.log("error getting all users: ", err);
-        res.status(500).json({error: 'error retrieving records from database'});
-    });
+    if (!req.user) {
+        res.status(401).json({error: "you are not authorized to make this request; please login"});
+    }
+
+    if (req.isAuthenticated()) {
+        if (req.user.role === "admin") {
+            userDAO.getAllUsers().then(function (users) {
+                res.send(users);
+            }).catch(function (err) {
+                console.log("error getting all users: ", err);
+                res.status(500).json({error: 'error retrieving records from database'});
+            });
+        } else {
+            res.status(401).json({error: "you are not authorized to make this request; must be admin"});
+        }
+    } else {
+        res.status(401).json({error: "you are not authorized to make this request; please login"});
+    }
 };
 
 exports.get = (req, res) => {
     console.log(`API GET request called for ${req.params.email}`);
+
+    //todo: must be your own email, otherwise admin
 
     userDAO.getUser(req.params.email).then(function (user) {
         if (user) {
@@ -32,6 +46,8 @@ exports.create = (req, res) => {
     console.log(`API POST request called for 'create user'`);
 
     const params = req.body;
+
+    //todo: invite code logic for permission (no session needed)
 
     //assume parameters have been sanitized on client side
 
@@ -58,6 +74,8 @@ exports.update = (req, res) => {
 
     const params = req.body;
 
+    //todo: must be your own email, otherwise admin
+
     //assume parameters have been sanitized on client side
 
     if (Object.keys(params).length === 3) {
@@ -81,6 +99,8 @@ exports.update = (req, res) => {
 
 exports.delete = (req, res) => {
     console.log(`API DELETE request called for ${req.params.email}`);
+
+    //todo: must be your own email, otherwise admin
 
     userDAO.deleteUser(req.params.email).then(function (result) {
         if (result.deletedCount === 0) {
