@@ -4,6 +4,15 @@ const purchaseOrderController = require('../Controller/PurchaseOrderController')
 
 let router = express.Router();
 
-router.get('/po', purchaseOrderController.getAll);
+//core
+router.get('/po', purchaseOrderController.getAll); //mod+
+//router.get('/po/:num', purchaseOrderController.getPO);
+//router.put('/po/:num', purchaseOrderController.update);
+//router.post('/po', purchaseOrderController.create);
+//router.delete('/po/:num', purchaseOrderController.delete);
+
+//utility
+//router.get('/po/sub/:subteam', purchaseOrderController.getBySubteam);
+//router.get('/po/user/:email', purchaseOrderController.getByUser);
 
 module.exports = router;

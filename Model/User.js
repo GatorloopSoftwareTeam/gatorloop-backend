@@ -34,4 +34,7 @@ const Schema = new mongoose.Schema({
     }
 });
 
+//email confirmation?
+//is purchase_orders necessary if /po/user/:email gets all POs for a user
+
 exports.Model = mongoose.model("User", Schema);

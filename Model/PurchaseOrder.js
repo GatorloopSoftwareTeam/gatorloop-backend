@@ -2,8 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = new mongoose.Schema({
     owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        type: String
     },
     date_created: {
         type: Date,

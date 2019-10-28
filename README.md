@@ -11,7 +11,7 @@ Want to contribute to the project or test things out?
 1. Download and install the latest stable version of node and npm [here](https://nodejs.org/en/).
 2. Clone the repository into a local directory.
 3. Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) to set up your own testing database. Follow the instructions to create a free tier instance.
-4. To connect your test database, go to the MongoDB Atlas control panel. On your instance, select the CONNECT button. Select "Connect your application". Select "Node.js" driver version "3.0 or later". Copy and paste the url into the config file (found at <./Config/config.json>). The field is `development > database > url`.
+4. To connect your test database, go to the MongoDB Atlas control panel. On your instance, select the CONNECT button. Select "Connect your application". Select "Node.js" driver version "3.0 or later". Copy and paste the url into the [config file](./Config/config.json). The field is `development > database > url`.
 4. Run `npm install` to install the compatible version of all dependencies.
 5. Run `npm start` to launch the server!
 
@@ -31,6 +31,10 @@ Current API endpoints for manipulating the database. Parameters should be passed
 | POST      | `/api/user/`               | Create new user                   | name, email, password           | invite code needed (no auth needed)        |
 | DELETE    | `/api/user/:email`         | Delete user with specified email  | none                            | user & manager -> own info; admin -> all   |
 | GET       | `/api/user/:email/promote` | Increase user's permissions       | none                            | sender can promote any other to own level  |
+
+#### PurchaseOrder
+
+#### Invite
 
 ### Authorization
 
@@ -126,3 +130,25 @@ Each type of object stored in the database is defined by a schema (like a bluepr
 ```
 
 #### Invite
+
+```
+{
+    user_email: {
+        type: String,
+        unique: true,
+        trim: true
+    },
+    code: {
+      type: String,
+      unique: true
+    },
+    is_confirmed: {
+        type: Boolean,
+        default: false
+    },
+    date_created: {
+        type: Date,
+        default: Date.now
+    }
+}
+```
