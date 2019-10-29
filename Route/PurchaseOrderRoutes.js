@@ -5,7 +5,7 @@ const purchaseOrderController = require('../Controller/PurchaseOrderController')
 let router = express.Router();
 
 //core
-router.get('/po', purchaseOrderController.getAll); //mod+
+router.get('/po', purchaseOrderController.getAll);
 //router.get('/po/:num', purchaseOrderController.getPO);
 //router.put('/po/:num', purchaseOrderController.update);
 //router.post('/po', purchaseOrderController.create);

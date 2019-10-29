@@ -1,4 +1,4 @@
-const purchaseOrderDAO = require("../DAO/PurchaseOrderDAO");
+const purchaseOrderDAO = require('../DAO/PurchaseOrderDAO');
 
 exports.getAll = (req, res) => {
     console.log("API GET request called for all purchase orders");

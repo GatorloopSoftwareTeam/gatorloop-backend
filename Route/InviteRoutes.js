@@ -11,4 +11,7 @@ let router = express.Router();
 //router.post('/invite', inviteController.create);
 //router.delete('/invite/:email', inviteController.delete);
 
+//util
+//router.get('/invite/confirm/:code', inviteController.confirm);
+
 module.exports = router;

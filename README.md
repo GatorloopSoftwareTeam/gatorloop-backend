@@ -19,11 +19,11 @@ Note: The sample database url in the config file will not run because the passwo
 
 ### API
 
-Current API endpoints for manipulating the database. Parameters should be passed as a JSON object in the body of the request. Most requests must be sent from authenticated through sessions (see next section).
+Current API endpoints for manipulating the database. Parameters should be passed as a JSON object in the body of the request. Most requests must be sent from authenticated through sessions (see *Authentication* section).
 
 #### User
 
-| HTTP VERB | URI                        | Description                       | Parameters                      | Permissions                                |
+| HTTP VERB | URI                        | Description                       | POST Parameters                      | Permissions                                |
 | ---       | ---                        | ---                               | ---                             | ---                                        |
 | GET       | `/api/user`                | Get all users                     | none                            | only admin                                 |
 | GET       | `/api/user/:email`         | Get user with specified email     | none                            | user & manager -> own info; admin -> all   |
@@ -32,25 +32,55 @@ Current API endpoints for manipulating the database. Parameters should be passed
 | DELETE    | `/api/user/:email`         | Delete user with specified email  | none                            | user & manager -> own info; admin -> all   |
 | GET       | `/api/user/:email/promote` | Increase user's permissions       | none                            | sender can promote any other to own level  |
 
+- add endpoint to get POs?
+
 #### PurchaseOrder
+
+| HTTP VERB | URI                     | Description                                             | POST Parameters        | Permissions                                |
+| ---       | ---                     | ---                                                     | ---                    | ---                                        |
+| GET       | `/api/po`               | Get all purchase orders                                 | none                   | manager & admin                            |
+| GET       | `/api/po/:num`          | Get purchase order with specified number                | none                   | user -> own PO; manager & admin -> all     |
+| PUT       | `/api/po/:num`          | Update purchase order with specified number             | TODO                   | user -> own PO; manager & admin -> all     |
+| POST      | `/api/po/`              | Create new purchase order                               | TODO                   | all                                        |
+| DELETE    | `/api/po/:num`          | Delete purchase order with specified number             | none                   | manager & admin                            |
+| GET       | `/api/po/sub/:subteam`  | Get all purchase orders for specified subteam           | none                   | user -> own subteam; manager & admin       |
+| GET       | `/api/po/user/:email`   | Get all purchase orders for specified user email        | none                   | user -> own email; manager & admin         |
+| POST      | `/api/po/:num/status`   | Set new status of purchase orders for specified number  | new status             | manager & admin                            |
 
 #### Invite
 
-### Authorization
+| HTTP VERB | URI                          | Description                                    | POST Parameters                               | Permissions                           |
+| ---       | ---                          | ---                                            | ---                                      | ---                                        |
+| GET       | `/api/invite`                | Get all invite codes                           | none                                     | only admin                                 |
+| GET       | `/api/invite/:email`         | Get invite code with specified user email      | none                                     | user & manager -> own info; admin -> all   |
+| PUT       | `/api/invite/:email`         | Update invite code with specified user email   | code, (new) user email, inviting email   | user & manager -> own info; admin -> all   |
+| POST      | `/api/invite/`               | Create new invite code                         | code, (new) user email, inviting email   | manager & admin                            |
+| DELETE    | `/api/invite/:email`         | Delete invite code with specified user email   | none                                     | user & manager -> own info; admin -> all   |
+| GET       | `/api/invite/confirm/:code`  | Check whether code and user email match        | email                                    | all                                        |
 
-| HTTP VERB | URI                        | Description                       | Parameters                      | Permissions        |
-| ---       | ---                        | ---                               | ---                             | ---                |
-| GET       | `/auth/login`              | Show login screen                 | none                            | no auth needed     |
-| POST      | `/auth/login`              | Authenticate credentials          | username, password              | no auth needed     |
-| GET       | `/auth/logout`             | End authenticated session         | none                            | no auth needed     |
+- Might remove edit feature; just delete and create a new one.
+- Access by email or by code?
+- Is confirm necessary if `/auth/signup` calls same functionality internally?
+
+### Authentication
+
+| HTTP VERB | URI                        | Description                       | Parameters                           |
+| ---       | ---                        | ---                               | ---                                  |
+| GET       | `/auth/login`              | Shows login screen                 | none                                 |
+| POST      | `/auth/login`              | Authenticates credentials          | email, password                      |
+| GET       | `/auth/signup`             | Shows signup screen                | none                                 |
+| POST      | `/auth/signup`             | Creates user                       | name, email, password, invite code   |
+| GET       | `/auth/logout`             | Ends authenticated session         | none                                 |
 
 ### Views
 
 | URI       | Description                        | Access             |
 | ---       | ---                                | ---                |
-| /         | redirect to home                   | all                |
-| /home     | default page with welcome message  | all                |
-| /profile  | shows user info                    | authenticated user |
+| /         | Redirect to home                   | all                |
+| /home     | Default page with welcome message  | all                |
+| /profile  | Shows user info                    | authenticated user |
+| /login    | Shows login form                   | all                |
+| /signup   | Shows signup form                  | all                |
 
 ### Schemas
 
@@ -60,47 +90,48 @@ Each type of object stored in the database is defined by a schema (like a bluepr
 
 ```
 {
-       name: {
-               type: String,
-               trim: true
-           },
-           email: {
-               type: String,
-               unique: true,
-               trim: true
-           },
-           password: {
-               type: String,
-               minlength: 8
-           },
-           role: {
-               type: String,
-               default: "user",
-               enum: ["admin", "manager", "user"]
-           },
-           purchase_orders: [{
-                 type: mongoose.Schema.Types.ObjectId,
-                 ref: 'PurchaseOrder'
-           }],
-           subteam: {
-               type: String,
-               enum: [],
-               default: "unassigned"
-           },
-           date_created: {
-               type: Date,
-               default: Date.now
-           }
+    name: {
+        type: String,
+        trim: true
+    },
+    email: {
+        type: String,
+        unique: true,
+        trim: true
+    },
+    password: {
+        type: String,
+        minlength: 8
+    },
+    role: {
+        type: String,
+        default: "user",
+        enum: ["admin", "manager", "user"]
+    },
+    purchase_orders: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'PurchaseOrder'
+    }],
+    subteam: {
+        type: String,
+        enum: [],
+        default: "unassigned"
+    },
+    date_created: {
+        type: Date,
+        default: Date.now
+    }
 }
 ```
+
+- Is it necessary to keep an array of purchase orders if one can use `/api/po/user/:email` ?
 
 #### Purchase Order
 
 ```
 {
     owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        type: String
     },
     date_created: {
         type: Date,
@@ -149,6 +180,20 @@ Each type of object stored in the database is defined by a schema (like a bluepr
     date_created: {
         type: Date,
         default: Date.now
+    },
+    inviting_email: {
+        type: String,
+        trim: true
     }
 }
 ```
+
+### TODO
+- confirm permissions/schemas
+- email notification system
+- hash passwords
+- attach frontend
+- reset password
+- confirm email
+- request invite code
+- UF SAML??

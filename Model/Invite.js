@@ -17,6 +17,10 @@ const Schema = new mongoose.Schema({
     date_created: {
         type: Date,
         default: Date.now
+    },
+    inviting_email: {
+        type: String,
+        trim: true
     }
 });
 

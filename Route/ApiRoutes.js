@@ -9,4 +9,9 @@ router.get('/', function(req, res) {
     res.json({message: 'Welcome to the database api'});
 });
 
-module.exports = [router, userRoutes, purchaseOrderRoutes];
+//default for /api/*
+router.get('*', function (req, res) {
+    res.status(404).json({error: "api endpoint not found"})
+});
+
+module.exports = [userRoutes, purchaseOrderRoutes, router];
