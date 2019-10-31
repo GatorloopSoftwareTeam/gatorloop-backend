@@ -32,9 +32,20 @@ exports.updateUser = (email_, name_, new_email_, password_) => {
         }).catch(function (err){
             reject(err);
         });
-    })
+    });
 };
 
 exports.deleteUser = (email_) => {
     return User.remove({email: email_}, {single: true}).exec();
+};
+
+exports.promoteUser = (email_, new_role) => {
+    return new Promise (function (resolve, reject) {
+        User.findOne({ email: email_ }).exec().then(function (user) {
+            user.role = new_role;
+            resolve(user.save());
+        }).catch(function (err){
+            reject(err);
+        });
+    });
 };

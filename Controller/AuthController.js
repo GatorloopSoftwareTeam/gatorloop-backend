@@ -27,6 +27,7 @@ exports.login = (req, res) => {
 exports.logout = (req, res) => {
     console.log("API GET request called for /auth/logout");
 
+    //only one necessary?
     req.session.destroy();
     req.logout();
     res.redirect('/home');

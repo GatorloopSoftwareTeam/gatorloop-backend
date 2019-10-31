@@ -10,7 +10,7 @@ const config = require('./Config/config.json');
 const database = require('./Database/database.js');
 const apiRoutes = require('./Route/ApiRoutes');
 const authRoutes = require('./Route/AuthRoutes');
-const viewRoutes = require('./Route/ViewRoutes')
+const viewRoutes = require('./Route/ViewRoutes');
 
 const userDAO = require('./DAO/UserDAO');
 
