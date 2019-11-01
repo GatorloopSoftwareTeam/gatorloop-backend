@@ -2,8 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = new mongoose.Schema({
     owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        type: String
     },
     date_created: {
         type: Date,
@@ -24,6 +23,11 @@ const Schema = new mongoose.Schema({
         type: String,
         enum: ["New", "Seen", "Submitted", "Approved", "Ordered", "Delivered"],
         default: "New"
+    },
+    subteam: {
+        type: String,
+        enum: [],
+        default: "unassigned"
     },
     last_updated: {
         type: Date,

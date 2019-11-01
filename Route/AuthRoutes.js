@@ -1,26 +1,24 @@
 const express = require('express');
 const passport = require('passport');
 
+const authController = require('../Controller/AuthController');
+
 let router = express.Router();
 
-router.get('/login',
-    function(req, res){
-        res.render('login');
-    });
+router.post('/signup', authController.signup);
 
 router.post('/login',
     passport.authenticate('local', {
-        successRedirect: '/profile',
-        failureRedirect: '/auth/login',
+        successRedirect: '/home',
+        failureRedirect: '/login',
         failureFlash: true
-    })
-);
+    }));
 
-router.get('/logout',
-    function(req, res){
-        req.session.destroy();
-        req.logout();
-        res.redirect('/home');
-    });
+router.get('/logout', authController.logout);
+
+//default for /auth/*
+router.get('*', function (req, res) {
+    res.redirect('/login');
+});
 
 module.exports = router;
