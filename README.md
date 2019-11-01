@@ -23,14 +23,14 @@ Current API endpoints for manipulating the database. Parameters should be passed
 
 #### User
 
-| HTTP VERB | URI                        | Description                       | POST Parameters                      | Permissions                                |
-| ---       | ---                        | ---                               | ---                             | ---                                        |
-| GET       | `/api/user`                | Get all users                     | none                            | only admin                                 |
-| GET       | `/api/user/:email`         | Get user with specified email     | none                            | user & manager -> own info; admin -> all   |
-| PUT       | `/api/user/:email`         | Update user with specified email  | name, email (new), password     | user & manager -> own info; admin -> all   |
-| POST      | `/api/user/`               | Create new user                   | name, email, password           | invite code needed (no auth needed)        |
-| DELETE    | `/api/user/:email`         | Delete user with specified email  | none                            | user & manager -> own info; admin -> all   |
-| GET       | `/api/user/:email/promote` | Increase user's permissions       | none                            | sender can promote any other to own level  |
+| HTTP VERB | URI                               | Description                       | POST Parameters                      | Permissions                                |
+| ---       | ---                               | ---                               | ---                             | ---                                        |
+| GET       | `/api/user`                       | Get all users                     | none                            | only admin                                 |
+| GET       | `/api/user/:email`                | Get user with specified email     | none                            | user & manager -> own info; admin -> all   |
+| PUT       | `/api/user/:email`                | Update user with specified email  | name, email (new), password     | user & manager -> own info; admin -> all   |
+| POST      | `/api/user/`                      | Create new user                   | name, email, password           | invite code needed (no auth needed)        |
+| DELETE    | `/api/user/:email`                | Delete user with specified email  | none                            | user & manager -> own info; admin -> all   |
+| GET       | `/api/user/:email/promote/:role`  | Increase user's permissions       | none                            | sender can promote any other to own level  |
 
 - add endpoint to get POs?
 
@@ -64,11 +64,9 @@ Current API endpoints for manipulating the database. Parameters should be passed
 
 ### Authentication
 
-| HTTP VERB | URI                        | Description                       | Parameters                           |
-| ---       | ---                        | ---                               | ---                                  |
-| GET       | `/auth/login`              | Shows login screen                 | none                                 |
+| HTTP VERB | URI                        | Description                        | Parameters                           |
+| ---       | ---                        | ---                                | ---                                  |
 | POST      | `/auth/login`              | Authenticates credentials          | email, password                      |
-| GET       | `/auth/signup`             | Shows signup screen                | none                                 |
 | POST      | `/auth/signup`             | Creates user                       | name, email, password, invite code   |
 | GET       | `/auth/logout`             | Ends authenticated session         | none                                 |
 
@@ -147,6 +145,11 @@ Each type of object stored in the database is defined by a schema (like a bluepr
     file_location: {
         type: String,
         unique: true
+    },
+    subteam: {
+        type: String,
+        enum: [],
+        default: "unassigned"
     },
     status: {
         type: String,

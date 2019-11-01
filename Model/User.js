@@ -36,5 +36,6 @@ const Schema = new mongoose.Schema({
 
 //email confirmation?
 //is purchase_orders necessary if /po/user/:email gets all POs for a user
+//todo: change password to hash
 
 exports.Model = mongoose.model("User", Schema);

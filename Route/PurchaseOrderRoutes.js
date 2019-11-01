@@ -6,13 +6,13 @@ let router = express.Router();
 
 //core
 router.get('/po', purchaseOrderController.getAll);
-//router.get('/po/:num', purchaseOrderController.getPO);
-//router.put('/po/:num', purchaseOrderController.update);
-//router.post('/po', purchaseOrderController.create);
-//router.delete('/po/:num', purchaseOrderController.delete);
+router.get('/po/:num', purchaseOrderController.getPO);
+router.put('/po/:num', purchaseOrderController.update);
+router.post('/po', purchaseOrderController.create);
+router.delete('/po/:num', purchaseOrderController.delete);
 
 //utility
-//router.get('/po/sub/:subteam', purchaseOrderController.getBySubteam);
-//router.get('/po/user/:email', purchaseOrderController.getByUser);
+router.get('/po/sub/:subteam', purchaseOrderController.getBySubteam);
+router.get('/po/user/:email', purchaseOrderController.getByUser);
 
 module.exports = router;

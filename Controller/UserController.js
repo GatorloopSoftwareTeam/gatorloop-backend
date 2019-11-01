@@ -119,7 +119,7 @@ exports.delete = (req, res) => {
     if (req.params.email === req.user.email || req.user.role === "admin") {
         userDAO.deleteUser(req.params.email).then(function (result) {
             if (result.deletedCount === 0) {
-                //success
+                //fail
                 res.status(404).json({error: "could not find record to remove for email: " + req.params.email});
             } else if (result.deletedCount === 1) {
                 //success

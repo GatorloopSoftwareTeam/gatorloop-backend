@@ -24,6 +24,11 @@ const Schema = new mongoose.Schema({
         enum: ["New", "Seen", "Submitted", "Approved", "Ordered", "Delivered"],
         default: "New"
     },
+    subteam: {
+        type: String,
+        enum: [],
+        default: "unassigned"
+    },
     last_updated: {
         type: Date,
         default: Date.now
