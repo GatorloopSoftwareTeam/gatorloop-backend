@@ -104,7 +104,7 @@ Each type of object stored in the database is defined by a schema (like a bluepr
     role: {
         type: String,
         default: "user",
-        enum: ["admin", "manager", "user"]
+        enum: ["admin", "manager", "member", "user"]
     },
     purchase_orders: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -191,6 +191,10 @@ Each type of object stored in the database is defined by a schema (like a bluepr
 }
 ```
 
+### License
+
+Copyright (C) 2019, Gatorloop Team, University of Florida. All Rights Reserved.
+
 ### TODO
 - confirm permissions/schemas
 - email notification system
@@ -199,4 +203,5 @@ Each type of object stored in the database is defined by a schema (like a bluepr
 - reset password
 - confirm email
 - request invite code
+- TESTING
 - UF SAML??

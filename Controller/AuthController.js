@@ -7,6 +7,26 @@ exports.signup = (req, res) => {
     console.log("API POST request called for /auth/signup");
 
     const params = req.body;
+    console.log(params);
+
+    if (Object.keys(params).length === 4) {
+        userDAO.createUser(params["name"], params["username"], params["password"]).then(function (newUser) {
+            console.log('New User Created!', newUser);
+            //res.json(newUser);
+            //res.json({success: true, message: "New User Created"});
+            res.redirect(200, '/home');
+        }).catch(function(err) {
+            if (err.name === 'ValidationError') {
+                console.error('Error Validating!', err);
+                res.status(422).json(err);
+            } else {
+                console.error(err);
+                res.status(500).json(err);
+            }
+        });
+    } else {
+        res.status(404).send("Insufficient parameters provided");
+    }
 
     //todo
     //inviteDAO.confirmInvite(params.invite_code, params.email);

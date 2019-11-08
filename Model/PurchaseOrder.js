@@ -15,6 +15,9 @@ const Schema = new mongoose.Schema({
     description: {
         type: String
     },
+    parts: [{
+        //TODO
+    }],
     file_location: {
         type: String,
         unique: true
@@ -32,6 +35,13 @@ const Schema = new mongoose.Schema({
     last_updated: {
         type: Date,
         default: Date.now
+    },
+    deadline: {
+        type: Date
+    },
+    priority: {
+        type: Number,
+        enum: [1,2,3,4,5]
     }
 });
 

@@ -62,9 +62,9 @@ exports.create = (req, res) => {
     //subteam will be gotten from user session
 
     if (Object.keys(params).length === 4) {
-        purchaseOrderDAO.createPurchaseOrder(params["po_number"], params["owner"], params["description"], params["file_location"]).then(function(newUser) {
-            console.log('New PO Created!', newUser);
-            res.json(newUser);
+        purchaseOrderDAO.createPurchaseOrder(params["po_number"], params["owner"], params["description"], params["file_location"]).then(function(newPO) {
+            console.log('New PO Created!', newPO);
+            res.json(newPO);
         }).catch(function(err) {
             if (err.name === 'ValidationError') {
                 console.error('Error Validating!', err);

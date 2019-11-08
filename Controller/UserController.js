@@ -1,5 +1,7 @@
 const userDAO = require("../DAO/UserDAO");
 
+//todo move basic authentication check to a seperate function, keep role checks in controller functions
+
 exports.getAll = (req, res) => {
     console.log("API GET request called for all users");
 
@@ -152,6 +154,8 @@ exports.promote = (req, res) => {
         res.status(401).json({error: "you are not authorized to make this request; please login"});
         return;
     }
+
+    //todo: only admin can demote
 
     if (permission_levels[req.params.role] > permission_levels[req.user.role]) {
         res.status(401).json({error: "you are not authorized to make this request; must cannot promote to that level"});
