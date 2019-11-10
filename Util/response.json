@@ -1,0 +1,10 @@
+[
+  {
+    "status": "success",
+    "data": "user obj"
+  },
+  {
+    "status": "fail",
+    "error": "error message"
+  }
+]

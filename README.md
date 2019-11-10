@@ -196,6 +196,9 @@ Each type of object stored in the database is defined by a schema (like a bluepr
 Copyright (C) 2019, Gatorloop Team, University of Florida. All Rights Reserved.
 
 ### TODO
+- standardize json responses
+- update documentation
+
 - confirm permissions/schemas
 - email notification system
 - hash passwords
