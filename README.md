@@ -19,7 +19,7 @@ Note: The sample database url in the config file will not run because the passwo
 
 ### API
 
-Current API endpoints for manipulating the database. Parameters should be passed as a JSON object in the body of the request. Most requests must be sent from authenticated through sessions (see *Authentication* section).
+Current API endpoints for manipulating the database. Parameters should be passed as a JSON object in the body of the request. Most requests must be sent from authenticated through sessions (see *Authentication* section). **Must send correct number of parameters with names as described in these tables.**
 
 #### User
 
@@ -47,28 +47,14 @@ Current API endpoints for manipulating the database. Parameters should be passed
 | GET       | `/api/po/user/:email`   | Get all purchase orders for specified user email        | none                   | user -> own email; manager & admin         |
 | POST      | `/api/po/:num/status`   | Set new status of purchase orders for specified number  | new status             | manager & admin                            |
 
-#### Invite
-
-| HTTP VERB | URI                          | Description                                    | POST Parameters                               | Permissions                           |
-| ---       | ---                          | ---                                            | ---                                      | ---                                        |
-| GET       | `/api/invite`                | Get all invite codes                           | none                                     | only admin                                 |
-| GET       | `/api/invite/:email`         | Get invite code with specified user email      | none                                     | user & manager -> own info; admin -> all   |
-| PUT       | `/api/invite/:email`         | Update invite code with specified user email   | code, (new) user email, inviting email   | user & manager -> own info; admin -> all   |
-| POST      | `/api/invite/`               | Create new invite code                         | code, (new) user email, inviting email   | manager & admin                            |
-| DELETE    | `/api/invite/:email`         | Delete invite code with specified user email   | none                                     | user & manager -> own info; admin -> all   |
-| GET       | `/api/invite/confirm/:code`  | Check whether code and user email match        | email                                    | all                                        |
-
-- Might remove edit feature; just delete and create a new one.
-- Access by email or by code?
-- Is confirm necessary if `/auth/signup` calls same functionality internally?
-
 ### Authentication
 
-| HTTP VERB | URI                        | Description                        | Parameters                           |
-| ---       | ---                        | ---                                | ---                                  |
-| POST      | `/auth/login`              | Authenticates credentials          | email, password                      |
-| POST      | `/auth/signup`             | Creates user                       | name, email, password, invite code   |
-| GET       | `/auth/logout`             | Ends authenticated session         | none                                 |
+| HTTP VERB | URI                        | Description                        | POST Parameters                  |
+| ---       | ---                        | ---                                | ---                              |
+| POST      | `/auth/login`              | Authenticates credentials          | "username", "password"           |
+| POST      | `/auth/signup`             | Creates user                       | "name", "username", "password"   |
+| GET       | `/auth/logout`             | Ends authenticated session         | none                             |
+| GET       | `/auth/status`             | Returns current session status     | none                             |
 
 ### Views
 
@@ -163,41 +149,16 @@ Each type of object stored in the database is defined by a schema (like a bluepr
 }
 ```
 
-#### Invite
-
-```
-{
-    user_email: {
-        type: String,
-        unique: true,
-        trim: true
-    },
-    code: {
-      type: String,
-      unique: true
-    },
-    is_confirmed: {
-        type: Boolean,
-        default: false
-    },
-    date_created: {
-        type: Date,
-        default: Date.now
-    },
-    inviting_email: {
-        type: String,
-        trim: true
-    }
-}
-```
-
 ### License
 
 Copyright (C) 2019, Gatorloop Team, University of Florida. All Rights Reserved.
 
 ### TODO
-- standardize json responses
+- ~~standardize json responses~~
+- ensure proper permissions for each request
+- ensure no data is leaked by api response (re: update methods)
 - update documentation
+- improve console logging
 
 - confirm permissions/schemas
 - email notification system

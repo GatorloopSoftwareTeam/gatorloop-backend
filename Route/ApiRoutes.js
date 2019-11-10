@@ -1,7 +1,7 @@
 const express = require("express");
 
 const userRoutes = require("./UserRoutes");
-const purchaseOrderRoutes = require("./PurchaseOrderRoutes")
+const purchaseOrderRoutes = require("./PurchaseOrderRoutes");
 
 const router = express.Router();
 
