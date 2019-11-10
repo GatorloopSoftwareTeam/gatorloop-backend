@@ -57,21 +57,28 @@ exports.create = (req, res) => {
 
     //assume parameters have been sanitized on client side
 
-    if (Object.keys(params).length === 3) {
-        userDAO.createUser(params["name"], params["email"], params["password"]).then(function(newUser) {
-            console.log("New User Created!", newUser);
-            res.json(net.getSuccessResponse(null, newUser));
-        }).catch(function(err) {
-            if (err.name === "ValidationError") {
-                console.error("Error Validating!", err);
-                res.status(422).json(net.getErrorResponse(err));
-            } else {
-                console.error(err);
-                res.status(500).json(net.getErrorResponse(err));
-            }
-        });
-    } else {
-        res.status(404).json(net.getErrorResponse("Insufficient parameters provided"));
+    if (!req.user || !req.isAuthenticated()) {
+        res.status(401).json(net.getErrorResponse("you are not authorized to make this request; please login"));
+        return;
+    }
+
+    if (req.user.role === "admin") {
+        if (Object.keys(params).length === 3) {
+            userDAO.createUser(params["name"], params["email"], params["password"]).then(function (newUser) {
+                console.log("New User Created!", newUser);
+                res.json(net.getSuccessResponse(null, newUser));
+            }).catch(function (err) {
+                if (err.name === "ValidationError") {
+                    console.error("Error Validating!", err);
+                    res.status(422).json(net.getErrorResponse(err));
+                } else {
+                    console.error(err);
+                    res.status(500).json(net.getErrorResponse(err));
+                }
+            });
+        } else {
+            res.status(404).json(net.getErrorResponse("Insufficient parameters provided"));
+        }
     }
 };
 

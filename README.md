@@ -1,10 +1,10 @@
-## Gatorloop Website Backend
+# Gatorloop Website Backend
 
-### Overview
+## Overview
 
 This package will run the database and authentication system behind the Gatorloop website. Built on Express.js and MongoDB.
 
-### Development
+## Development
 
 Want to contribute to the project or test things out?
 
@@ -17,24 +17,47 @@ Want to contribute to the project or test things out?
 
 Note: The sample database url in the config file will not run because the password has been redacted.
 
-### API
+## API
 
 Current API endpoints for manipulating the database. Parameters should be passed as a JSON object in the body of the request. Most requests must be sent from authenticated through sessions (see *Authentication* section). **Must send correct number of parameters with names as described in these tables.**
 
-#### User
+### Response Format
+
+Upon each API call, the server will return a JSON object with the following formats.
+
+#### Success
+
+```
+{
+    "success": true,
+    "message": "message"
+    "data": JSON
+}
+```
+
+#### Error
+
+```
+{
+    "success": false,
+    "error": String
+}
+```
+
+### User
 
 | HTTP VERB | URI                               | Description                       | POST Parameters                      | Permissions                                |
-| ---       | ---                               | ---                               | ---                             | ---                                        |
-| GET       | `/api/user`                       | Get all users                     | none                            | only admin                                 |
-| GET       | `/api/user/:email`                | Get user with specified email     | none                            | user & manager -> own info; admin -> all   |
-| PUT       | `/api/user/:email`                | Update user with specified email  | name, email (new), password     | user & manager -> own info; admin -> all   |
-| POST      | `/api/user/`                      | Create new user                   | name, email, password           | invite code needed (no auth needed)        |
-| DELETE    | `/api/user/:email`                | Delete user with specified email  | none                            | user & manager -> own info; admin -> all   |
-| GET       | `/api/user/:email/promote/:role`  | Increase user's permissions       | none                            | sender can promote any other to own level  |
+| ---       | ---                               | ---                               | ---                                  | ---                                        |
+| GET       | `/api/user`                       | Get all users                     | none                                 | only admin                                 |
+| GET       | `/api/user/:email`                | Get user with specified email     | none                                 | user & manager -> own info; admin -> all   |
+| PUT       | `/api/user/:email`                | Update user with specified email  | "name", "email", "password"          | user & manager -> own info; admin -> all   |
+| POST      | `/api/user/`                      | Create new user                   | "name", "email", "password"          | only admin                                 |
+| DELETE    | `/api/user/:email`                | Delete user with specified email  | none                                 | user & manager -> own info; admin -> all   |
+| GET       | `/api/user/:email/promote/:role`  | Increase user's permissions       | none                                 | sender can promote any other to own level  |
 
 - add endpoint to get POs?
 
-#### PurchaseOrder
+### PurchaseOrder
 
 | HTTP VERB | URI                     | Description                                             | POST Parameters        | Permissions                                |
 | ---       | ---                     | ---                                                     | ---                    | ---                                        |
@@ -47,7 +70,7 @@ Current API endpoints for manipulating the database. Parameters should be passed
 | GET       | `/api/po/user/:email`   | Get all purchase orders for specified user email        | none                   | user -> own email; manager & admin         |
 | POST      | `/api/po/:num/status`   | Set new status of purchase orders for specified number  | new status             | manager & admin                            |
 
-### Authentication
+## Authentication
 
 | HTTP VERB | URI                        | Description                        | POST Parameters                  |
 | ---       | ---                        | ---                                | ---                              |
@@ -56,7 +79,7 @@ Current API endpoints for manipulating the database. Parameters should be passed
 | GET       | `/auth/logout`             | Ends authenticated session         | none                             |
 | GET       | `/auth/status`             | Returns current session status     | none                             |
 
-### Views
+## Views
 
 | URI       | Description                        | Access             |
 | ---       | ---                                | ---                |
@@ -66,11 +89,11 @@ Current API endpoints for manipulating the database. Parameters should be passed
 | /login    | Shows login form                   | all                |
 | /signup   | Shows signup form                  | all                |
 
-### Schemas
+## Schemas
 
 Each type of object stored in the database is defined by a schema (like a blueprint). For more information, see the mongoose documentation on the topic [here](https://mongoosejs.com/docs/guide.html).
 
-#### User
+### User
 
 ```
 {
@@ -83,34 +106,41 @@ Each type of object stored in the database is defined by a schema (like a bluepr
         unique: true,
         trim: true
     },
+    //deprecated
     password: {
         type: String,
         minlength: 8
+    },
+    password_hash: {
+        type: String
+    },
+    password_salt: {
+       type: String
     },
     role: {
         type: String,
         default: "user",
         enum: ["admin", "manager", "member", "user"]
     },
-    purchase_orders: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'PurchaseOrder'
-    }],
     subteam: {
         type: String,
-        enum: [],
+        enum: ["Mech", "ECE", "None", "unassigned"],
         default: "unassigned"
     },
     date_created: {
         type: Date,
         default: Date.now
+    },
+    email_confirmed: {
+        type: Boolean,
+        default: false
     }
 }
 ```
 
 - Is it necessary to keep an array of purchase orders if one can use `/api/po/user/:email` ?
 
-#### Purchase Order
+### Purchase Order
 
 ```
 {
@@ -128,44 +158,69 @@ Each type of object stored in the database is defined by a schema (like a bluepr
     description: {
         type: String
     },
-    file_location: {
+    parts: [Part],
+    status: {
         type: String,
-        unique: true
+        enum: ["New", "Seen", "Submitted", "Approved", "Ordered", "Delivered"],
+        default: "New"
     },
     subteam: {
         type: String,
         enum: [],
         default: "unassigned"
     },
-    status: {
-        type: String,
-        enum: ["New", "Seen", "Submitted", "Approved", "Ordered", "Delivered"],
-        default: "New"
-    },
     last_updated: {
         type: Date,
         default: Date.now
+    },
+    deadline: {
+        type: Date
+    },
+    priority: {
+        type: Number,
+        enum: [1,2,3,4,5]
+    },
+    comment: {
+        type: String
+    },
+    total_price: {
+        type: Number
     }
 }
 ```
 
-### License
+#### Part
+
+Subset of Purchase Order Schema.
+
+```
+{
+    url: String,
+    vendor: String,
+    price: Number,
+    quantity: Number
+}
+```
+
+## License
 
 Copyright (C) 2019, Gatorloop Team, University of Florida. All Rights Reserved.
 
-### TODO
+## TODO
 - ~~standardize json responses~~
+- refactor update and create user to include all changeable fields
+- refactor update and create PO to include all changable fields
+- hash passwords
+
 - ensure proper permissions for each request
 - ensure no data is leaked by api response (re: update methods)
-- update documentation
+- update documentation for returned data (per endpoint)
 - improve console logging
 
 - confirm permissions/schemas
 - email notification system
-- hash passwords
 - attach frontend
 - reset password
 - confirm email
-- request invite code
-- TESTING
+- unit testing!!
 - UF SAML??

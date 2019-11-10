@@ -1,10 +1,11 @@
 [
   {
-    "status": "success",
-    "data": "user obj"
+    "success": true,
+    "message": "message",
+    "data": {}
   },
   {
-    "status": "fail",
-    "error": "error message"
+    "success": false,
+    "error": "error"
   }
 ]
