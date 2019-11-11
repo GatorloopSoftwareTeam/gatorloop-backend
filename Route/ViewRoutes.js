@@ -1,39 +1,39 @@
-const express = require('express');
+const express = require("express");
 
 let router = express.Router();
 
-router.get('/',
+router.get("/",
     function(req, res) {
-        res.redirect('/home');
+        res.redirect("/home");
     });
 
-router.get('/home',
+router.get("/home",
     function(req, res) {
-        res.render('home', { user: req.user });
+        res.render("home", { user: req.user });
     });
 
-router.get('/profile',
-    require('connect-ensure-login').ensureLoggedIn('/login'),
+router.get("/profile",
+    require("connect-ensure-login").ensureLoggedIn("/login"),
     function(req, res){
-        res.render('profile', { user: req.user });
+        res.render("profile", { user: req.user });
     });
 
-router.get('/login',
+router.get("/login",
     function(req, res){
-        res.render('login');
+        res.render("login");
     });
 
-router.get('/signup',
+router.get("/signup",
     function(req, res){
         if (req.user) {
-            res.redirect('/home');
+            res.redirect("/home");
         } else {
-            res.render('signup');
+            res.render("signup");
         }
     });
 
 //default for /*
-router.get('*', function (req, res) {
+router.get("*", function (req, res) {
     res.status(404).send("page not found");
 });
 

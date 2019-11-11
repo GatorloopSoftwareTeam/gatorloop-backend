@@ -10,31 +10,37 @@ const Schema = new mongoose.Schema({
         unique: true,
         trim: true
     },
+    //deprecated
     password: {
         type: String,
         minlength: 8
     },
+    password_hash: {
+        type: String
+    },
+    password_salt: {
+       type: String
+    },
     role: {
         type: String,
         default: "user",
-        enum: ["admin", "manager", "user"]
+        enum: ["admin", "manager", "member", "user"]
     },
-    purchase_orders: [{
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'PurchaseOrder'
-    }],
     subteam: {
         type: String,
-        enum: [],
+        enum: ["Mech", "ECE", "None", "unassigned"],
         default: "unassigned"
     },
     date_created: {
         type: Date,
         default: Date.now
+    },
+    email_confirmed: {
+        type: Boolean,
+        default: false
     }
 });
 
-//email confirmation?
 //is purchase_orders necessary if /po/user/:email gets all POs for a user
 //todo: change password to hash
 

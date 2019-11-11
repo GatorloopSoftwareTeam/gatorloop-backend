@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Part = require("./Part.js").Schema;
 
 const Schema = new mongoose.Schema({
     owner: {
@@ -15,10 +16,7 @@ const Schema = new mongoose.Schema({
     description: {
         type: String
     },
-    file_location: {
-        type: String,
-        unique: true
-    },
+    parts: [Part],
     status: {
         type: String,
         enum: ["New", "Seen", "Submitted", "Approved", "Ordered", "Delivered"],
@@ -32,6 +30,19 @@ const Schema = new mongoose.Schema({
     last_updated: {
         type: Date,
         default: Date.now
+    },
+    deadline: {
+        type: Date
+    },
+    priority: {
+        type: Number,
+        enum: [1,2,3,4,5]
+    },
+    comment: {
+        type: String
+    },
+    total_price: {
+        type: Number
     }
 });
 

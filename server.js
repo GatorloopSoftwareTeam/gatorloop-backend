@@ -7,7 +7,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 const config = require('./Config/config.json');
-const database = require('./Database/database.js');
+const database = require('./Database/Database.js');
 const apiRoutes = require('./Route/ApiRoutes');
 const authRoutes = require('./Route/AuthRoutes');
 const viewRoutes = require('./Route/ViewRoutes');
