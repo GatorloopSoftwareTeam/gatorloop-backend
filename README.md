@@ -57,15 +57,20 @@ Upon each API call, the server will return a JSON object with the following form
 
 - add endpoint to get POs?
 
-##### POST `/api/user/` Parameters
+#### POST `/api/user/`
+
+#### Parameters
 
 | Parameter  | Required |
 | ---        | ---      |
 | name       | yes      |
 | email      | yes      |
 | subteam    | no       |
-| role       | no       |
 | password   | yes      |
+
+#### Return Data
+
+New User JSON Object
 
 ##### PUT `/api/user/:email` Parameters
 | Parameter  | Required |
@@ -73,8 +78,11 @@ Upon each API call, the server will return a JSON object with the following form
 | name       | no       |
 | email      | no       |
 | subteam    | no       |
-| role       | no       |
 | password   | no       |
+
+#### Return Data
+
+Array of fields updated
 
 ### PurchaseOrder
 
@@ -227,9 +235,9 @@ Copyright (C) 2019, Gatorloop Team, University of Florida. All Rights Reserved.
 
 ## TODO
 - ~~standardize json responses~~
-- refactor update and create user to include all changeable fields
+- ~~refactor update and create user to include all changeable fields~~
 - refactor update and create PO to include all changable fields
-- hash passwords
+- hash passwords (passport-local-mongoose)
 
 - ensure proper permissions for each request
 - ensure no data is leaked by api response (re: update methods)

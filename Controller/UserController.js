@@ -1,7 +1,7 @@
 const userDAO = require("../DAO/UserDAO");
 const net = require("../Util/Net");
 
-const allowed_fields = ["name", "email", "subteam", "role", "password"];
+const allowed_fields = ["name", "email", "subteam", "password"];
 exports.allowed_fields = allowed_fields;
 
 const required_fields = ["name", "email", "password"];
@@ -101,7 +101,6 @@ exports.create = (req, res) => {
             res.status(404).json(net.getErrorResponse(`cannot set field '${keys[i]}' or does not exist`));
             return;
         }
-        //todo empty fields
     }
 
     userDAO.createUser(params).then(function (newUser) {
