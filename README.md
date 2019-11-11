@@ -46,6 +46,8 @@ Upon each API call, the server will return a JSON object with the following form
 
 ### User
 
+User emails are unique (see User Schema below) so User endpoints utilize the email field to identify the correct record to manipulate.
+
 | HTTP VERB | URI                               | Description                       | Permissions                                |
 | ---       | ---                               | ---                               | ---                                        |
 | GET       | `/api/user`                       | Get all users                     | only admin                                 |
@@ -55,11 +57,9 @@ Upon each API call, the server will return a JSON object with the following form
 | DELETE    | `/api/user/:email`                | Delete user with specified email  | user & manager -> own info; admin -> all   |
 | GET       | `/api/user/:email/promote/:role`  | Increase user's permissions       | sender can promote any other to own level  |
 
-- add endpoint to get POs?
-
 #### POST `/api/user/`
 
-#### Parameters
+##### Parameters
 
 | Parameter  | Required |
 | ---        | ---      |
@@ -68,11 +68,14 @@ Upon each API call, the server will return a JSON object with the following form
 | subteam    | no       |
 | password   | yes      |
 
-#### Return Data
+##### Return Data
 
 New User JSON Object
 
-##### PUT `/api/user/:email` Parameters
+#### PUT `/api/user/:email` 
+
+##### Parameters
+
 | Parameter  | Required |
 | ---        | ---      |
 | name       | no       |
@@ -80,9 +83,9 @@ New User JSON Object
 | subteam    | no       |
 | password   | no       |
 
-#### Return Data
+##### Return Data
 
-Array of fields updated
+Array of the fields updated
 
 ### PurchaseOrder
 
