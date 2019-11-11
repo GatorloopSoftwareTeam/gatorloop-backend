@@ -46,16 +46,35 @@ Upon each API call, the server will return a JSON object with the following form
 
 ### User
 
-| HTTP VERB | URI                               | Description                       | POST Parameters                      | Permissions                                |
-| ---       | ---                               | ---                               | ---                                  | ---                                        |
-| GET       | `/api/user`                       | Get all users                     | none                                 | only admin                                 |
-| GET       | `/api/user/:email`                | Get user with specified email     | none                                 | user & manager -> own info; admin -> all   |
-| PUT       | `/api/user/:email`                | Update user with specified email  | "name", "email", "password"          | user & manager -> own info; admin -> all   |
-| POST      | `/api/user/`                      | Create new user                   | "name", "email", "password"          | only admin                                 |
-| DELETE    | `/api/user/:email`                | Delete user with specified email  | none                                 | user & manager -> own info; admin -> all   |
-| GET       | `/api/user/:email/promote/:role`  | Increase user's permissions       | none                                 | sender can promote any other to own level  |
+| HTTP VERB | URI                               | Description                       | Permissions                                |
+| ---       | ---                               | ---                               | ---                                        |
+| GET       | `/api/user`                       | Get all users                     | only admin                                 |
+| GET       | `/api/user/:email`                | Get user with specified email     | user & manager -> own info; admin -> all   |
+| PUT       | `/api/user/:email`                | Update user with specified email  | user & manager -> own info; admin -> all   |
+| POST      | `/api/user/`                      | Create new user                   | only admin                                 |
+| DELETE    | `/api/user/:email`                | Delete user with specified email  | user & manager -> own info; admin -> all   |
+| GET       | `/api/user/:email/promote/:role`  | Increase user's permissions       | sender can promote any other to own level  |
 
 - add endpoint to get POs?
+
+##### POST `/api/user/` Parameters
+
+| Parameter  | Required |
+| ---        | ---      |
+| name       | yes      |
+| email      | yes      |
+| subteam    | no       |
+| role       | no       |
+| password   | yes      |
+
+##### PUT `/api/user/:email` Parameters
+| Parameter  | Required |
+| ---        | ---      |
+| name       | no       |
+| email      | no       |
+| subteam    | no       |
+| role       | no       |
+| password   | no       |
 
 ### PurchaseOrder
 
