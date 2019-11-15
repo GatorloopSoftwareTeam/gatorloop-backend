@@ -3,18 +3,25 @@ const net = require("../Util/Net");
 
 const passport = require("passport");
 
+const allowed_fields = ["name", "username", "subteam", "password"];
+exports.allowed_fields = allowed_fields;
+
+const required_fields = ["name", "username", "password", "subteam"];
+exports.required_fields = required_fields;
+
 exports.signup = (req, res) => {
     console.log("API POST request called for /auth/signup");
 
     //assume parameters sanitized on client
     const params = req.body;
+    const keys = Object.keys(params);
 
     if (keys.length < required_fields.length) {
         res.status(404).json(net.getErrorResponse("Insufficient parameters provided"));
         return;
     }
 
-    //name, email, password required
+    //name, username, password required
     for (let i = 0; i < required_fields.length; ++i) {
         if (!keys.includes(required_fields[i])) {
             res.status(404).json(net.getErrorResponse(`'${required_fields[i]}' field is required`));
@@ -29,6 +36,7 @@ exports.signup = (req, res) => {
             return;
         }
     }
+
     userDAO.createUser(params).then(function (newUser) {
         console.log("new user created", newUser);
         res.json(net.getSuccessResponse("new user created", newUser));

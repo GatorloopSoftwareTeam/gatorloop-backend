@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const Model = mongoose.model("Counter", {name: String, sequence_value: Number});
 exports.Model = Model;
 
+//adapted from https://www.tutorialspoint.com/mongodb/mongodb_autoincrement_sequence.htm
 exports.getNextSequenceValue = (sequenceName) => {
     return Model.findOneAndUpdate(
         {name: sequenceName },
