@@ -63,7 +63,6 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(email, done) {
     console.log("deserialize");
     userDAO.getUser(email).then(function(user) {
-        //todo: only store certain fields of user object
         done(null, user)
     }).catch(function (err) {
         done(err)

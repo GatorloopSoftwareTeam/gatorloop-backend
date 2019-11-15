@@ -41,7 +41,7 @@ const Schema = new mongoose.Schema({
     }
 });
 
-//is purchase_orders necessary if /po/user/:email gets all POs for a user
+//todo: implement array of po_numbers owned
 //todo: change password to hash
 
 exports.Model = mongoose.model("User", Schema);

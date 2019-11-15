@@ -19,7 +19,20 @@ Note: The sample database url in the config file will not run because the passwo
 
 ## API
 
-Current API endpoints for manipulating the database. Parameters should be passed as a JSON object in the body of the request. Most requests must be sent from authenticated through sessions (see *Authentication* section). **Must send correct number of parameters with names as described in these tables.**
+Current API endpoints for manipulating the database. Parameters should be passed as a JSON object in the body of the request. Most requests must be sent from authenticated through sessions (see *Authentication* section). **Must send correct number of parameters with names as described in these tables.** Some fields are limited to an enumeration of valid values; see schema for respective object for those values.
+
+### Permissions
+
+Authenticated users have a permission role attachted to their session. See Permissions column of each API endpoint.
+
+| Role             | General Description                            |
+| ---              | ---                                            |
+| user [default]   | Limited permissions for any new user account   |
+| member           | Access to view and create Purchase Orders      |
+| manager          | Access to edit and updat Purchase Orders       |
+| admin            | Access to manage users accounts                |
+
+Planned: Member must have set subteam, confirmed email, and admin approval
 
 ### Response Format
 
@@ -61,12 +74,12 @@ User emails are unique (see User Schema below) so User endpoints utilize the ema
 
 ##### Parameters
 
-| Parameter  | Required |
-| ---        | ---      |
-| name       | yes      |
-| email      | yes      |
-| subteam    | no       |
-| password   | yes      |
+| Parameter  | Type             | Required  |
+| ---        | ---              | ---       |
+| name       | String           | yes       |
+| email      | String           | yes       |
+| subteam    | Enum (String)    | no        |
+| password   | String           | yes       |
 
 ##### Return Data
 
@@ -76,12 +89,12 @@ New User JSON Object
 
 ##### Parameters
 
-| Parameter  | Required |
-| ---        | ---      |
-| name       | no       |
-| email      | no       |
-| subteam    | no       |
-| password   | no       |
+| Parameter  | Type             | Required |
+| ---        | ---              | ---      |
+| name       | String           | no       |
+| email      | String           | no       |
+| subteam    | Enum (String)    | no       |
+| password   | String           | no       |
 
 ##### Return Data
 
@@ -89,16 +102,60 @@ Array of the fields updated
 
 ### PurchaseOrder
 
-| HTTP VERB | URI                     | Description                                             | POST Parameters        | Permissions                                |
-| ---       | ---                     | ---                                                     | ---                    | ---                                        |
-| GET       | `/api/po`               | Get all purchase orders                                 | none                   | manager & admin                            |
-| GET       | `/api/po/:num`          | Get purchase order with specified number                | none                   | user -> own PO; manager & admin -> all     |
-| PUT       | `/api/po/:num`          | Update purchase order with specified number             | TODO                   | user -> own PO; manager & admin -> all     |
-| POST      | `/api/po/`              | Create new purchase order                               | TODO                   | all                                        |
-| DELETE    | `/api/po/:num`          | Delete purchase order with specified number             | none                   | manager & admin                            |
-| GET       | `/api/po/sub/:subteam`  | Get all purchase orders for specified subteam           | none                   | user -> own subteam; manager & admin       |
-| GET       | `/api/po/user/:email`   | Get all purchase orders for specified user email        | none                   | user -> own email; manager & admin         |
-| POST      | `/api/po/:num/status`   | Set new status of purchase orders for specified number  | new status             | manager & admin                            |
+| HTTP VERB | URI                     | Description                                             | Permissions                                |
+| ---       | ---                     | ---                                                     | ---                                        |
+| GET       | `/api/po`               | Get all purchase orders                                 | member and above                           |
+| GET       | `/api/po/:num`          | Get purchase order with specified number                | member and above                           |
+| PUT       | `/api/po/:num`          | Update purchase order with specified number             | member -> own PO; manager & admin -> all   |
+| POST      | `/api/po/`              | Create new purchase order                               | member and above                           |
+| DELETE    | `/api/po/:num`          | Delete purchase order with specified number             | member -> own PO; manager & admin -> all   |
+| GET       | `/api/po/sub/:subteam`  | Get all purchase orders for specified subteam           | member and above                           |
+| GET       | `/api/po/user/:email`   | Get all purchase orders for specified user email        | member and above                           |
+| POST      | `/api/po/:num/status`   | Set new status of purchase orders for specified number  | manager and above                          |
+
+#### POST `/api/po/`
+
+##### Parameters
+
+| Parameter     | Type          | Required |
+| ---           | ---           | ---      |
+| owner (email) | String        | no*      |
+| description   | String        | yes      |
+| parts         | JSON Object   | yes      |
+| status        | Enum (String) | no       |
+| subteam       | Enum (String) | yes      |
+| deadline      | String        | yes      |
+| priority      | Enum (Number) | yes      |
+| comment       | String        | no       |
+| total_price   | Number        | yes      |
+
+*Note: po_number will be ignored as server autogenerates this value*
+
+\* If owner or subteam not sent, those values according to the user's session will be used 
+
+##### Return Data
+
+New PO JSON Object
+
+#### PUT `/api/po/:num` 
+
+##### Parameters
+
+| Parameter     | Type          | Required |
+| ---           | ---           | ---      |
+| owner (email) | String        | no       |
+| description   | String        | no       |
+| parts         | JSON Object   | no       |
+| status        | Enum (String) | no       |
+| subteam       | Enum (String) | no       |
+| deadline      | String        | no       |
+| priority      | Enum (Number) | no       |
+| comment       | String        | no       |
+| total_price   | Number        | no       |
+
+##### Return Data
+
+Array of the fields updated
 
 ## Authentication
 
@@ -239,16 +296,25 @@ Copyright (C) 2019, Gatorloop Team, University of Florida. All Rights Reserved.
 ## TODO
 - ~~standardize json responses~~
 - ~~refactor update and create user to include all changeable fields~~
-- refactor update and create PO to include all changable fields
+- ~~refactor update and create PO to include all changable fields~~
 - hash passwords (passport-local-mongoose)
 
+- validate parts json
+- implement array of po numbers in User schema
+- update status route for PO
+- only admin can demote logic
+- determine deadline type in PO schema
+
+- initialize counters dynamically
 - ensure proper permissions for each request
-- ensure no data is leaked by api response (re: update methods)
+- ensure no data is leaked by api response (re: update methods return objects with all fields)
 - update documentation for returned data (per endpoint)
 - improve console logging
 
 - confirm permissions/schemas
 - email notification system
+- module for generating pdf/excel spreadsheet
+
 - attach frontend
 - reset password
 - confirm email

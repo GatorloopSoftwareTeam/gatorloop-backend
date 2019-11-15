@@ -4,19 +4,15 @@ exports.getAllPurchaseOrders = () => {
     return PurchaseOrder.find({}).exec();
 };
 
-//todo: add subteam
-exports.createPurchaseOrder = (
-    po_number_,
-    owner_,
-    description_,
-    file_location_
-) => {
-    const newPO = new PurchaseOrder({
-        po_number: po_number_,
-        owner: owner_,
-        description: description_,
-        file_location: file_location_
-    });
+exports.createPurchaseOrder = (data) => {
+    const keys = Object.keys(data);
+    const newPO = new PurchaseOrder({});
+
+    for (let i = 0; i < keys.length; ++i) {
+        console.log(newPO[keys[i]] + " => " + data[keys[i]]);
+        newPO[keys[i]] = data[keys[i]];
+    }
+
     return newPO.save();
 };
 
@@ -25,14 +21,17 @@ exports.getPO = (po_number_) => {
     return PurchaseOrder.findOne({ po_number: po_number_ });
 };
 
-//todo: add subteam
-exports.updatePO = (po_number_, new_po_number_, new_owner_, new_description_, new_file_location_) => {
+exports.updatePO = (po_number_, new_info) => {
+
+    const keys = Object.keys(new_info);
+    console.log(keys);
+
     return new Promise (function (resolve, reject) {
         PurchaseOrder.findOne({ po_number: po_number_ }).exec().then(function (po) {
-            po.po_number = new_po_number_;
-            po.owner = new_owner_;
-            po.description = new_description_;
-            po.file_location = new_file_location_;
+            for (let i = 0; i < keys.length; ++i) {
+                console.log(po[keys[i]] + " => " + new_info[keys[i]]);
+                po[keys[i]] = new_info[keys[i]];
+            }
             resolve(po.save());
         }).catch(function (err){
             reject(err);
