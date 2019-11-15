@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const Part = require("./Part.js").Schema;
 
 const Schema = new mongoose.Schema({
     owner: {
@@ -16,7 +15,7 @@ const Schema = new mongoose.Schema({
     description: {
         type: String
     },
-    parts: [Part],
+    parts: [Object],
     status: {
         type: String,
         enum: ["New", "Seen", "Submitted", "Approved", "Ordered", "Delivered"],
@@ -32,7 +31,7 @@ const Schema = new mongoose.Schema({
         default: Date.now
     },
     deadline: {
-        type: Date
+        type: String
     },
     priority: {
         type: Number,
@@ -45,5 +44,9 @@ const Schema = new mongoose.Schema({
         type: Number
     }
 });
+
+//multiple comments?
+//priority and deadline?
+//deadline string or date type?
 
 exports.Model = mongoose.model("PurchaseOrder", Schema);
