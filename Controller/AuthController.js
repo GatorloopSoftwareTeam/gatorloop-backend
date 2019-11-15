@@ -3,10 +3,10 @@ const net = require("../Util/Net");
 
 const passport = require("passport");
 
-const allowed_fields = ["name", "username", "subteam", "password"];
+const allowed_fields = ["name", "email", "subteam", "password"];
 exports.allowed_fields = allowed_fields;
 
-const required_fields = ["name", "username", "password", "subteam"];
+const required_fields = ["name", "email", "password", "subteam"];
 exports.required_fields = required_fields;
 
 exports.signup = (req, res) => {
