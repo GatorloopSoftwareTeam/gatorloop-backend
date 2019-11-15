@@ -28,7 +28,7 @@ const Schema = new mongoose.Schema({
     },
     subteam: {
         type: String,
-        enum: ["Mech", "ECE", "None", "unassigned"],
+        enum: ["mech", "ece", "none", "unassigned"],
         default: "unassigned"
     },
     date_created: {

@@ -72,7 +72,7 @@ User emails are unique (see User Schema below) so User endpoints utilize the ema
 
 #### POST `/api/user/`
 
-##### Parameters
+##### POST Parameters
 
 | Parameter  | Type             | Required  |
 | ---        | ---              | ---       |
@@ -87,7 +87,7 @@ New User JSON Object
 
 #### PUT `/api/user/:email` 
 
-##### Parameters
+##### PUT Parameters
 
 | Parameter  | Type             | Required |
 | ---        | ---              | ---      |
@@ -115,7 +115,7 @@ Array of the fields updated
 
 #### POST `/api/po/`
 
-##### Parameters
+##### POST Parameters
 
 | Parameter     | Type          | Required |
 | ---           | ---           | ---      |
@@ -123,7 +123,7 @@ Array of the fields updated
 | description   | String        | yes      |
 | parts         | JSON Object   | yes      |
 | status        | Enum (String) | no       |
-| subteam       | Enum (String) | yes      |
+| subteam       | Enum (String) | no*      |
 | deadline      | String        | yes      |
 | priority      | Enum (Number) | yes      |
 | comment       | String        | no       |
@@ -139,7 +139,7 @@ New PO JSON Object
 
 #### PUT `/api/po/:num` 
 
-##### Parameters
+##### PUT Parameters
 
 | Parameter     | Type          | Required |
 | ---           | ---           | ---      |
@@ -158,6 +158,8 @@ New PO JSON Object
 Array of the fields updated
 
 ## Authentication
+
+Parameters must be x-www-form-urlencoded instead of json in the body.
 
 | HTTP VERB | URI                        | Description                        | POST Parameters                  |
 | ---       | ---                        | ---                                | ---                              |
@@ -309,7 +311,7 @@ Copyright (C) 2019, Gatorloop Team, University of Florida. All Rights Reserved.
 - ensure proper permissions for each request
 - ensure no data is leaked by api response (re: update methods return objects with all fields)
 - update documentation for returned data (per endpoint)
-- improve console logging
+- improve console logging (log vs error; morgan npm package for http logging)
 
 - confirm permissions/schemas
 - email notification system
