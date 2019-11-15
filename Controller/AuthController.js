@@ -17,14 +17,14 @@ exports.signup = (req, res) => {
     const keys = Object.keys(params);
 
     if (keys.length < required_fields.length) {
-        res.status(404).json(net.getErrorResponse("Insufficient parameters provided"));
+        res.status(422).json(net.getErrorResponse("Insufficient parameters provided"));
         return;
     }
 
     //name, username, password required
     for (let i = 0; i < required_fields.length; ++i) {
         if (!keys.includes(required_fields[i])) {
-            res.status(404).json(net.getErrorResponse(`'${required_fields[i]}' field is required`));
+            res.status(422).json(net.getErrorResponse(`'${required_fields[i]}' field is required`));
             return;
         }
     }
@@ -32,7 +32,7 @@ exports.signup = (req, res) => {
     //check other fields allowed
     for (let i = 0; i < keys.length; ++i) {
         if (!allowed_fields.includes(keys[i])) {
-            res.status(404).json(net.getErrorResponse(`cannot set field '${keys[i]}' or does not exist`));
+            res.status(422).json(net.getErrorResponse(`cannot set field '${keys[i]}' or does not exist`));
             return;
         }
     }

@@ -82,14 +82,14 @@ exports.create = (req, res) => {
     const keys = Object.keys(params);
 
     if (keys.length < required_fields.length) {
-        res.status(404).json(net.getErrorResponse("Insufficient parameters provided"));
+        res.status(422).json(net.getErrorResponse("Insufficient parameters provided"));
         return;
     }
 
     //name, email, password required
     for (let i = 0; i < required_fields.length; ++i) {
         if (!keys.includes(required_fields[i])) {
-            res.status(404).json(net.getErrorResponse(`'${required_fields[i]}' field is required`));
+            res.status(422).json(net.getErrorResponse(`'${required_fields[i]}' field is required`));
             return;
         }
     }
@@ -97,7 +97,7 @@ exports.create = (req, res) => {
     //check other fields allowed
     for (let i = 0; i < keys.length; ++i) {
         if (!allowed_fields.includes(keys[i])) {
-            res.status(404).json(net.getErrorResponse(`cannot set field '${keys[i]}' or does not exist`));
+            res.status(422).json(net.getErrorResponse(`cannot set field '${keys[i]}' or does not exist`));
             return;
         }
     }
@@ -134,13 +134,13 @@ exports.update = (req, res) => {
     const keys = Object.keys(params);
 
     if (keys.length === 0) {
-        res.status(404).json(net.getErrorResponse("update request must include at least on parameter"));
+        res.status(422).json(net.getErrorResponse("update request must include at least on parameter"));
         return;
     }
 
     for (let i = 0; i < keys.length; ++i) {
         if (!allowed_fields.includes(keys[i])) {
-            res.status(404).json(net.getErrorResponse(`cannot update field '${keys[i]}' or does not exist`));
+            res.status(422).json(net.getErrorResponse(`cannot update field '${keys[i]}' or does not exist`));
             return;
         }
     }
@@ -176,7 +176,7 @@ exports.delete = (req, res) => {
     userDAO.deleteUser(req.params.email).then(function (result) {
         if (result.deletedCount === 0) {
             //fail
-            res.status(404).json(net.getErrorResponse("could not find record to remove for email: " + req.params.email));
+            res.status(422).json(net.getErrorResponse("could not find record to remove for email: " + req.params.email));
         } else if (result.deletedCount === 1) {
             //success
             res.json(net.getSuccessResponse("successfully removed record", req.params.email));
