@@ -4,7 +4,7 @@ const net = require("../Util/Net");
 const allowed_fields = ["name", "email", "subteam", "password"];
 exports.allowed_fields = allowed_fields;
 
-const required_fields = ["name", "email", "password"];
+const required_fields = ["name", "email", "password", "subteam"];
 exports.required_fields = required_fields;
 
 //used for easy comparison in promote method
@@ -147,7 +147,9 @@ exports.update = (req, res) => {
 
     userDAO.updateUser(req.params.email, params).then(function (updatedUser) {
         console.log("User " + updatedUser.email + " Updated!", updatedUser);
-        res.json(net.getSuccessResponse("updated", updatedUser));
+        userDAO.getUser(updatedUser.email).then(function (updatedUserClean) {
+            res.json(net.getSuccessResponse("updated", updatedUserClean));
+        });
     }).catch(function (err) {
         console.error("failed to update record");
         if (err.name === "ValidationError") {

@@ -1,4 +1,5 @@
 const userDAO = require("../DAO/UserDAO");
+const User = require("../Model/User.js").Model;
 const net = require("../Util/Net");
 
 const passport = require("passport");
@@ -56,8 +57,7 @@ exports.login = (req, res) => {
 
     passport.authenticate("local", {
         successRedirect: "/profile",
-        failureRedirect: "/login",
-        failureFlash: true
+        failureRedirect: "/login"
     });
 };
 
