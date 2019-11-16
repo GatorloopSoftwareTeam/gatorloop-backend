@@ -1,15 +1,17 @@
 const User = require("../Model/User.js").Model;
 
 exports.createUser = (data) => {
+    const password = data.password;
+    delete data.password;
+
+    const newUser = new User(data);
     const keys = Object.keys(data);
-    const newUser = new User({});
 
     for (let i = 0; i < keys.length; ++i) {
         console.log(newUser[keys[i]] + " => " + data[keys[i]]);
-        newUser[keys[i]] = data[keys[i]];
     }
 
-    return newUser.save();
+    return User.register(newUser, password);
 };
 
 exports.getAllUsers = () => {
@@ -23,6 +25,9 @@ exports.getUser = (email_) => {
 
 exports.updateUser = (email_, new_info) => {
 
+    const password = new_info.password;
+    delete new_info.password;
+
     const keys = Object.keys(new_info);
     console.log(keys);
 
@@ -32,7 +37,9 @@ exports.updateUser = (email_, new_info) => {
                 console.log(user[keys[i]] + " => " + new_info[keys[i]]);
                 user[keys[i]] = new_info[keys[i]];
             }
-            resolve(user.save());
+            user.setPassword(password).then((result) => {
+                resolve(user.save());
+            });
         }).catch(function (err){
             reject(err);
         });

@@ -23,7 +23,7 @@ const Schema = new mongoose.Schema({
     },
     subteam: {
         type: String,
-        enum: [],
+        enum: ["mech", "ece", "none", "unassigned"],
         default: "unassigned"
     },
     last_updated: {

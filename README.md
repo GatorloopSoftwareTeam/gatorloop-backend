@@ -72,13 +72,13 @@ User emails are unique (see User Schema below) so User endpoints utilize the ema
 
 #### POST `/api/user/`
 
-##### POST Parameters
+##### Parameters
 
 | Parameter  | Type             | Required  |
 | ---        | ---              | ---       |
 | name       | String           | yes       |
 | email      | String           | yes       |
-| subteam    | Enum (String)    | no        |
+| subteam    | Enum (String)    | yes       |
 | password   | String           | yes       |
 
 ##### Return Data
@@ -87,7 +87,7 @@ New User JSON Object
 
 #### PUT `/api/user/:email` 
 
-##### PUT Parameters
+##### Parameters
 
 | Parameter  | Type             | Required |
 | ---        | ---              | ---      |
@@ -115,7 +115,7 @@ Array of the fields updated
 
 #### POST `/api/po/`
 
-##### POST Parameters
+##### Parameters
 
 | Parameter     | Type          | Required |
 | ---           | ---           | ---      |
@@ -139,7 +139,7 @@ New PO JSON Object
 
 #### PUT `/api/po/:num` 
 
-##### PUT Parameters
+##### Parameters
 
 | Parameter     | Type          | Required |
 | ---           | ---           | ---      |
@@ -159,14 +159,12 @@ Array of the fields updated
 
 ## Authentication
 
-Parameters must be x-www-form-urlencoded instead of json in the body.
-
-| HTTP VERB | URI                        | Description                        | POST Parameters                  |
-| ---       | ---                        | ---                                | ---                              |
-| POST      | `/auth/login`              | Authenticates credentials          | "username", "password"           |
-| POST      | `/auth/signup`             | Creates user                       | "name", "username", "password"   |
-| GET       | `/auth/logout`             | Ends authenticated session         | none                             |
-| GET       | `/auth/status`             | Returns current session status     | none                             |
+| HTTP VERB | URI                        | Description                        | POST Parameters                                |
+| ---       | ---                        | ---                                | ---                                            |
+| POST      | `/auth/login`              | Authenticates credentials          | "email", "password" [x-www-form-urlencoded]    |
+| POST      | `/auth/signup`             | Creates user                       | "name", "email", "password", "subteam"         |
+| GET       | `/auth/logout`             | Ends authenticated session         | none                                           |
+| GET       | `/auth/status`             | Returns current session status     | none                                           |
 
 ## Views
 
@@ -213,7 +211,7 @@ Each type of object stored in the database is defined by a schema (like a bluepr
     },
     subteam: {
         type: String,
-        enum: ["Mech", "ECE", "None", "unassigned"],
+        enum: ["mech", "ece", "none", "unassigned"],
         default: "unassigned"
     },
     date_created: {
@@ -250,7 +248,7 @@ Each type of object stored in the database is defined by a schema (like a bluepr
     parts: [Part],
     status: {
         type: String,
-        enum: ["New", "Seen", "Submitted", "Approved", "Ordered", "Delivered"],
+        enum: ["new", "seen", "submitted", "approved", "ordered", "delivered"],
         default: "New"
     },
     subteam: {
@@ -299,19 +297,21 @@ Copyright (C) 2019, Gatorloop Team, University of Florida. All Rights Reserved.
 - ~~standardize json responses~~
 - ~~refactor update and create user to include all changeable fields~~
 - ~~refactor update and create PO to include all changable fields~~
-- hash passwords (passport-local-mongoose)
+- ~~hash passwords (passport-local-mongoose)~~
+- persitent sessions with database
 
 - validate parts json
 - implement array of po numbers in User schema
 - update status route for PO
 - only admin can demote logic
 - determine deadline type in PO schema
+- add change password endpoint
 
 - initialize counters dynamically
 - ensure proper permissions for each request
 - ensure no data is leaked by api response (re: update methods return objects with all fields)
 - update documentation for returned data (per endpoint)
-- improve console logging (log vs error; morgan npm package for http logging)
+- improve console logging
 
 - confirm permissions/schemas
 - email notification system

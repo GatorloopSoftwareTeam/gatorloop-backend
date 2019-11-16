@@ -1,12 +1,13 @@
 const userDAO = require("../DAO/UserDAO");
+const User = require("../Model/User.js").Model;
 const net = require("../Util/Net");
 
 const passport = require("passport");
 
-const allowed_fields = ["name", "username", "subteam", "password"];
+const allowed_fields = ["name", "email", "subteam", "password"];
 exports.allowed_fields = allowed_fields;
 
-const required_fields = ["name", "username", "password", "subteam"];
+const required_fields = ["name", "email", "password", "subteam"];
 exports.required_fields = required_fields;
 
 exports.signup = (req, res) => {
@@ -17,14 +18,14 @@ exports.signup = (req, res) => {
     const keys = Object.keys(params);
 
     if (keys.length < required_fields.length) {
-        res.status(404).json(net.getErrorResponse("Insufficient parameters provided"));
+        res.status(422).json(net.getErrorResponse("Insufficient parameters provided"));
         return;
     }
 
     //name, username, password required
     for (let i = 0; i < required_fields.length; ++i) {
         if (!keys.includes(required_fields[i])) {
-            res.status(404).json(net.getErrorResponse(`'${required_fields[i]}' field is required`));
+            res.status(422).json(net.getErrorResponse(`'${required_fields[i]}' field is required`));
             return;
         }
     }
@@ -32,7 +33,7 @@ exports.signup = (req, res) => {
     //check other fields allowed
     for (let i = 0; i < keys.length; ++i) {
         if (!allowed_fields.includes(keys[i])) {
-            res.status(404).json(net.getErrorResponse(`cannot set field '${keys[i]}' or does not exist`));
+            res.status(422).json(net.getErrorResponse(`cannot set field '${keys[i]}' or does not exist`));
             return;
         }
     }
@@ -56,8 +57,7 @@ exports.login = (req, res) => {
 
     passport.authenticate("local", {
         successRedirect: "/profile",
-        failureRedirect: "/login",
-        failureFlash: true
+        failureRedirect: "/login"
     });
 };
 

@@ -13,7 +13,7 @@ const authRoutes = require('./Route/AuthRoutes');
 const viewRoutes = require('./Route/ViewRoutes');
 
 const userDAO = require('./DAO/UserDAO');
-
+const User = require('./Model/User').Model;
 
 //main express app
 let app = express();
@@ -38,36 +38,10 @@ app.use(session({secret:'ntk7'}));
 app.use(passport.initialize());
 app.use(passport.session());
 
-//set up passport authentication
-passport.use(new LocalStrategy(
-    function(email, password, done) {
-        userDAO.getUser(email).then(function (user) {
-            if(user  && user.password === password){
-                console.log('Login Successful!');
-                done(null, user, {message: 'Login Successful!'});
-            } else {
-                console.log('Invalid username or password.');
-                done(null,false,{message: 'Invalid username or password.'});
-            }
-        }).catch(function (err) {
-            done(null,false,{message: 'Server error: '+err});
-        });
-    }
-));
+passport.use(User.createStrategy());
 
-passport.serializeUser(function(user, done) {
-    console.log("serialize");
-    done(null, user.email);
-});
-
-passport.deserializeUser(function(email, done) {
-    console.log("deserialize");
-    userDAO.getUser(email).then(function(user) {
-        done(null, user)
-    }).catch(function (err) {
-        done(err)
-    });
-});
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use('/api', apiRoutes);
 app.use('/auth', authRoutes);
