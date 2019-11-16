@@ -166,16 +166,6 @@ Array of the fields updated
 | GET       | `/auth/logout`             | Ends authenticated session         | none                                           |
 | GET       | `/auth/status`             | Returns current session status     | none                                           |
 
-## Views
-
-| URI       | Description                        | Access             |
-| ---       | ---                                | ---                |
-| /         | Redirect to home                   | all                |
-| /home     | Default page with welcome message  | all                |
-| /profile  | Shows user info                    | authenticated user |
-| /login    | Shows login form                   | all                |
-| /signup   | Shows signup form                  | all                |
-
 ## Schemas
 
 Each type of object stored in the database is defined by a schema (like a blueprint). For more information, see the mongoose documentation on the topic [here](https://mongoosejs.com/docs/guide.html).

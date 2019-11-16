@@ -15,3 +15,10 @@ exports.getSuccessResponse = (message, data) => {
     if (typeof data === "undefined") data = {};
     return {success: true, message: message, data: data}
 };
+
+// not functional??
+// exports.cleanUserData = (userData) => {
+//     delete userData.salt;
+//     delete userData.hash;
+//     return userData;
+// };

@@ -147,6 +147,8 @@ exports.update = (req, res) => {
 
     userDAO.updateUser(req.params.email, params).then(function (updatedUser) {
         console.log("User " + updatedUser.email + " Updated!", updatedUser);
+        //res.json(net.getSuccessResponse("updated", updatedUser));
+        //todo fix this dumb workaround
         userDAO.getUser(updatedUser.email).then(function (updatedUserClean) {
             res.json(net.getSuccessResponse("updated", updatedUserClean));
         });

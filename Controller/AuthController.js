@@ -52,13 +52,29 @@ exports.signup = (req, res) => {
     });
 };
 
-exports.login = (req, res) => {
+exports.login = (req, res, next) => {
     console.log("API POST request called for /auth/login");
 
-    passport.authenticate("local", {
-        successRedirect: "/profile",
-        failureRedirect: "/login"
-    });
+    passport.authenticate('local', function(err, user, info) {
+        console.log(user);
+        if (err) {
+            console.error(err);
+            res.status(500).json(net.getErrorResponse(err));
+            return;
+        }
+        if (!user) {
+            res.status(403).json(net.getErrorResponse("user not found"));
+            return;
+        }
+        req.logIn(user, function(err) {
+            if (err) {
+                console.error(err);
+                res.status(500).json(net.getErrorResponse(err));
+                return;
+            }
+            res.json(net.getSuccessResponse("successful login", user))
+        });
+    })(req, res, next);
 };
 
 exports.logout = (req, res) => {
@@ -67,5 +83,5 @@ exports.logout = (req, res) => {
     //only one necessary?
     req.session.destroy();
     req.logout();
-    res.redirect("/home");
+    res.json(net.getSuccessResponse("successful logout"));
 };

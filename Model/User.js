@@ -36,7 +36,16 @@ const Schema = new mongoose.Schema({
 //todo: implement array of po_numbers owned
 
 UserSchema.plugin(passportLocalMongoose, {
-    usernameField: "email"
+    usernameField: "email",
+    selectFields: [
+         "_id",
+        "role",
+        "subteam",
+        "email_confirmed",
+        "email",
+        "name",
+        "date_created"
+    ]
 });
 
 UserSchema.add(Schema);
