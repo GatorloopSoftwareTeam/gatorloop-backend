@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+const passportLocalMongoose = require('passport-local-mongoose');
+
+const UserSchema = new mongoose.Schema({});
 
 const Schema = new mongoose.Schema({
     name: {
@@ -9,17 +12,6 @@ const Schema = new mongoose.Schema({
         type: String,
         unique: true,
         trim: true
-    },
-    //deprecated
-    password: {
-        type: String,
-        minlength: 8
-    },
-    password_hash: {
-        type: String
-    },
-    password_salt: {
-       type: String
     },
     role: {
         type: String,
@@ -42,6 +34,11 @@ const Schema = new mongoose.Schema({
 });
 
 //todo: implement array of po_numbers owned
-//todo: change password to hash
 
-exports.Model = mongoose.model("User", Schema);
+UserSchema.plugin(passportLocalMongoose, {
+    usernameField: "email"
+});
+
+UserSchema.add(Schema);
+
+exports.Model = mongoose.model("User", UserSchema);

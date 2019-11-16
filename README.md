@@ -78,7 +78,7 @@ User emails are unique (see User Schema below) so User endpoints utilize the ema
 | ---        | ---              | ---       |
 | name       | String           | yes       |
 | email      | String           | yes       |
-| subteam    | Enum (String)    | no        |
+| subteam    | Enum (String)    | yes       |
 | password   | String           | yes       |
 
 ##### Return Data
@@ -123,7 +123,7 @@ Array of the fields updated
 | description   | String        | yes      |
 | parts         | JSON Object   | yes      |
 | status        | Enum (String) | no       |
-| subteam       | Enum (String) | yes      |
+| subteam       | Enum (String) | no*      |
 | deadline      | String        | yes      |
 | priority      | Enum (Number) | yes      |
 | comment       | String        | no       |
@@ -161,7 +161,7 @@ Array of the fields updated
 
 | HTTP VERB | URI                        | Description                        | POST Parameters                                |
 | ---       | ---                        | ---                                | ---                                            |
-| POST      | `/auth/login`              | Authenticates credentials          | "username", "password" [x-www-form-urlencoded] |
+| POST      | `/auth/login`              | Authenticates credentials          | "email", "password" [x-www-form-urlencoded]    |
 | POST      | `/auth/signup`             | Creates user                       | "name", "email", "password", "subteam"         |
 | GET       | `/auth/logout`             | Ends authenticated session         | none                                           |
 | GET       | `/auth/status`             | Returns current session status     | none                                           |
@@ -297,7 +297,7 @@ Copyright (C) 2019, Gatorloop Team, University of Florida. All Rights Reserved.
 - ~~standardize json responses~~
 - ~~refactor update and create user to include all changeable fields~~
 - ~~refactor update and create PO to include all changable fields~~
-- hash passwords (passport-local-mongoose)
+- ~~hash passwords (passport-local-mongoose)~~
 - persitent sessions with database
 
 - validate parts json
@@ -305,6 +305,7 @@ Copyright (C) 2019, Gatorloop Team, University of Florida. All Rights Reserved.
 - update status route for PO
 - only admin can demote logic
 - determine deadline type in PO schema
+- add change password endpoint
 
 - initialize counters dynamically
 - ensure proper permissions for each request

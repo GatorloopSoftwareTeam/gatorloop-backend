@@ -29,6 +29,27 @@
 					"response": []
 				},
 				{
+					"name": "GetOneUser",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/user/email7@gmail.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"user",
+								"email7@gmail.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "CreateUser",
 					"request": {
 						"method": "POST",
@@ -65,27 +86,6 @@
 					"response": []
 				},
 				{
-					"name": "GetOneUser",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/user/noah3@gmail.com",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"user",
-								"noah3@gmail.com"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "UpdateUser",
 					"request": {
 						"method": "PUT",
@@ -99,7 +99,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"noah10\",\n\t\"password\": \"noahPassword_10\"\n}",
+							"raw": "{\n\t\"password\": \"pass12345\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -107,7 +107,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/user/noah9@gmail.com",
+							"raw": "http://localhost:8080/api/user/email7@gmail.com",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -116,7 +116,7 @@
 							"path": [
 								"api",
 								"user",
-								"noah9@gmail.com"
+								"email7@gmail.com"
 							]
 						}
 					},
@@ -188,14 +188,26 @@
 							"mode": "urlencoded",
 							"urlencoded": [
 								{
-									"key": "username",
-									"value": "noah3@gmail.com",
+									"key": "email",
+									"value": "admin@gmail.com",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "123456789",
+									"value": "admin_pass",
 									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "email7@gmail.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "pass12345",
+									"type": "text",
+									"disabled": true
 								}
 							]
 						},
@@ -228,7 +240,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\": \"email@test123.com\",\n\t\"password\": \"pass1234\",\n\t\"name\": \"test123\",\n\t\"subteam\": \"ece\"\n}",
+							"raw": "{\n    \"email\": \"admin@gmail.com\",\n    \"password\": \"admin_pass\",\n    \"name\": \"Admin User\",\n    \"subteam\": \"none\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -387,7 +399,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\n\t\"description\": \"my new po 124 (update 1)\",\n\t\"total_price\": 107\n}",
+							"raw": "{\n\n\t\"description\": \"my new po (update 2)\",\n\t\"total_price\": 107.07\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -395,7 +407,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/po/7",
+							"raw": "http://localhost:8080/api/po/8",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -404,7 +416,7 @@
 							"path": [
 								"api",
 								"po",
-								"7"
+								"8"
 							]
 						}
 					},
