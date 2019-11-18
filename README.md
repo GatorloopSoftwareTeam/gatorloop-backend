@@ -183,15 +183,10 @@ Each type of object stored in the database is defined by a schema (like a bluepr
         unique: true,
         trim: true
     },
-    //deprecated
-    password: {
-        type: String,
-        minlength: 8
-    },
-    password_hash: {
+    hash: {
         type: String
     },
-    password_salt: {
+    salt: {
        type: String
     },
     role: {
@@ -288,8 +283,9 @@ Copyright (C) 2019, Gatorloop Team, University of Florida. All Rights Reserved.
 - ~~refactor update and create user to include all changeable fields~~
 - ~~refactor update and create PO to include all changable fields~~
 - ~~hash passwords (passport-local-mongoose)~~
-- persitent sessions with database
-
+- ~~persistent sessions with database~~
+- ensure no data is leaked by api response (re: update, login methods return objects with all fields);
+    configure deserialize to only select certain fields?
 - validate parts json
 - implement array of po numbers in User schema
 - update status route for PO
@@ -299,7 +295,6 @@ Copyright (C) 2019, Gatorloop Team, University of Florida. All Rights Reserved.
 
 - initialize counters dynamically
 - ensure proper permissions for each request
-- ensure no data is leaked by api response (re: update methods return objects with all fields)
 - update documentation for returned data (per endpoint)
 - improve console logging
 
