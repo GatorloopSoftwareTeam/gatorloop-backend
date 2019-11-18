@@ -4,6 +4,8 @@
 
 This package will run the database and authentication system behind the Gatorloop website. Built on Express.js and MongoDB.
 
+Want to know who we are and what we do at Gatorloop? Check us out at [https://gatorloop.com](https://gatorloop.com/)!
+
 ## Development
 
 Want to contribute to the project or test things out?
@@ -274,9 +276,15 @@ Subset of Purchase Order Schema.
 }
 ```
 
+## Testing
+- The .postman_collection.json file in the root directory of the repository provides a test configuration for each API endpoint that can be imported into [Postman](https://www.getpostman.com/).
+- More testing coming soon!
+
 ## License
 
 Copyright (C) 2019, Gatorloop Team, University of Florida. All Rights Reserved.
+
+Contact us at [https://gatorloop.com](https://gatorloop.com/)!
 
 ## TODO
 - ~~standardize json responses~~
@@ -292,18 +300,20 @@ Copyright (C) 2019, Gatorloop Team, University of Florida. All Rights Reserved.
 - only admin can demote logic
 - determine deadline type in PO schema
 - add change password endpoint
-
-- initialize counters dynamically
+- handle case when po number counter not initialized
+***
+- initialize counters dynamically (setup script?)
+- add more configurable parameters
 - ensure proper permissions for each request
 - update documentation for returned data (per endpoint)
 - improve console logging
-
+***
 - confirm permissions/schemas
 - email notification system
 - module for generating pdf/excel spreadsheet
-
+***
 - attach frontend
-- reset password
-- confirm email
+- reset password functionality (must have email system done first)
+- confirm email functionality
 - unit testing!!
 - UF SAML??
