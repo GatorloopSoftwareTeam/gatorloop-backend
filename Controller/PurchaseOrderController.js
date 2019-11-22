@@ -279,8 +279,9 @@ const validateParts = function (partsJson) {
         return true;
     }
 
-    const required = ["url", "vendor", "price", "quantity"];
-    const allowed = ["url", "vendor", "price", "quantity"];
+    const required = ["url", "vendor", "price", "quantity", "subtotal"];
+    const allowed = ["url", "vendor", "price", "quantity", "subtotal"];
+    const types = ["string", "string", "number", "number", "number"];
     const keys = Object.keys(partsJson);
 
     if (keys.length < required.length) return false;
@@ -294,6 +295,11 @@ const validateParts = function (partsJson) {
 
     //check other fields allowed
     for (let i = 0; i < keys.length; ++i) {
+        //check value is correct type
+        if (typeof partsJson[keys[i]] !== types[i]) {
+            return false;
+        }
+        //check of field is in array of allowed fields
         if (!allowed.includes(keys[i])) {
             return false;
         }

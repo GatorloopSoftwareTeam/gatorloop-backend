@@ -272,7 +272,8 @@ Subset of Purchase Order Schema.
     url: String,
     vendor: String,
     price: Number,
-    quantity: Number
+    quantity: Number,
+    subtotal: Number
 }
 ```
 
@@ -292,6 +293,8 @@ Contact us at [https://gatorloop.com](https://gatorloop.com/)!
 - ~~refactor update and create PO to include all changable fields~~
 - ~~hash passwords (passport-local-mongoose)~~
 - ~~persistent sessions with database~~
+- specify error.name and error.message
+- max length of all fields
 - ensure no data is leaked by api response (re: update, login methods return objects with all fields);
     configure deserialize to only select certain fields?
 - validate parts json
