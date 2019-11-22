@@ -86,9 +86,10 @@ exports.update = (req, res) => {
         }
     }
 
-    //validate parts
-    if (params.parts) {
-        //todo
+    //validate parts if parts specified
+    if (params.parts && !validateParts(params.parts)) {
+        res.status(422).json(net.getErrorResponse("invalid parts object"));
+        return;
     }
 
     purchaseOrderDAO.updatePO(req.params.num, params).then(function (updatedPO) {
@@ -155,8 +156,9 @@ exports.create = (req, res) => {
     }
 
     //validate parts
-    if (params.parts) {
-        //todo
+    if (!validateParts(params.parts)) {
+        res.status(422).json(net.getErrorResponse("invalid parts object"));
+        return;
     }
 
     counter.getNextSequenceValue("po_counter").then(function (updatedCounter) {
@@ -261,4 +263,41 @@ exports.getByUser = (req, res) => {
 
 exports.updateStatus = (req, res) => {
   //todo
+};
+
+//returns true if valid, false otherwise
+const validateParts = function (partsJson) {
+
+    //if partsJson is an array, call this method on each object in array
+    //when an object is passed, partsJson.length will be undefined which will allow the rest of the method (actual validation) to run
+    if (partsJson.length >= 1) {
+        for (let i = 0; i < partsJson.length; ++i) {
+            if (!validateParts(partsJson[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    const required = ["url", "vendor", "price", "quantity"];
+    const allowed = ["url", "vendor", "price", "quantity"];
+    const keys = Object.keys(partsJson);
+
+    if (keys.length < required.length) return false;
+
+    //check required fields
+    for (let i = 0; i < required.length; ++i) {
+        if (!keys.includes(required[i])) {
+            return false;
+        }
+    }
+
+    //check other fields allowed
+    for (let i = 0; i < keys.length; ++i) {
+        if (!allowed.includes(keys[i])) {
+            return false;
+        }
+    }
+
+    return true;
 };

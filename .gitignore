@@ -2,3 +2,4 @@
 /.idea/
 /package-lock.json
 /Config/config.json
+.DS_Store
