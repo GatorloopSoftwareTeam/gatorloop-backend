@@ -155,6 +155,8 @@ New PO JSON Object
 | comment       | String        | no       |
 | total_price   | Number        | no       |
 
+Parts JSON must be valid according to Schema found below.
+
 ##### Return Data
 
 Array of the fields updated
@@ -265,7 +267,7 @@ Each type of object stored in the database is defined by a schema (like a bluepr
 
 #### Part
 
-Subset of Purchase Order Schema.
+Subset of Purchase Order Schema. All fields must be specified. Types must also be as specified below.
 
 ```
 {
@@ -297,7 +299,7 @@ Contact us at [https://gatorloop.com](https://gatorloop.com/)!
 - max length of all fields
 - ensure no data is leaked by api response (re: update, login methods return objects with all fields);
     configure deserialize to only select certain fields?
-- validate parts json
+- ~~validate parts json~~
 - implement array of po numbers in User schema
 - update status route for PO
 - only admin can demote logic
