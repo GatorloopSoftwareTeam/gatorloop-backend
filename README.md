@@ -296,6 +296,7 @@ Contact us at [https://gatorloop.com](https://gatorloop.com/)!
 - ~~hash passwords (passport-local-mongoose)~~
 - ~~persistent sessions with database~~
 - specify error.name and error.message
+- move http status code to error obj (always return 200 for actual http request?)
 - max length of all fields
 - ensure no data is leaked by api response (re: update, login methods return objects with all fields);
     configure deserialize to only select certain fields?

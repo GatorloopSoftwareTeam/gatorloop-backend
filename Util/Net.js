@@ -6,8 +6,12 @@
 //     }
 // };
 
+exports.getErrorResponse = (name, message) => {
+    return {success: false, error: {name: name, message: message}};
+};
+
 exports.getErrorResponse = (error) => {
-    return {success: false, error: error};
+    return {success: false, error: {name: error.name, message: error.message}};
 };
 
 exports.getSuccessResponse = (message, data) => {

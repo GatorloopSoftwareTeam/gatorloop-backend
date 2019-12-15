@@ -17,6 +17,11 @@ mongoose.connection.on("disconnected", function() {
     console.log("Mongoose default connection disconnected");
 });
 
+//Settings
+mongoose.set("useCreateIndex", true);
+mongoose.set("useUnifiedTopology", true);
+mongoose.set("useNewUrlParser", true);
+
 process.on("SIGINT", function() {
     mongoose.connection.close(function() {
         console.log("Mongoose default connection disconnected through app termination");

@@ -1,5 +1,6 @@
 const userDAO = require("../DAO/UserDAO");
 const net = require("../Util/Net");
+const error = require("../Util/Error");
 
 const allowed_fields = ["name", "email", "subteam", "password"];
 exports.allowed_fields = allowed_fields;
@@ -21,12 +22,12 @@ exports.getAll = (req, res) => {
     console.log("API GET request called for all users");
 
     if (!req.user || !req.isAuthenticated()) {
-        res.status(401).json(net.getErrorResponse("you are not authorized to make this request; please login"));
+        res.status(401).json(net.getErrorResponse(error.NO_USER_SESSION));
         return;
     }
 
     if (req.user.role !== "admin") {
-        res.status(401).json(net.getErrorResponse("you are not authorized to make this request; must be admin"));
+        res.status(401).json(net.getErrorResponse(error.USER_NOT_AUTHORIZED));
         return;
     }
 
@@ -34,7 +35,7 @@ exports.getAll = (req, res) => {
         res.json(net.getSuccessResponse(null, users));
     }).catch(function (err) {
         console.log("error getting all users: ", err);
-        res.status(500).json(net.getErrorResponse("error retrieving records from database"));
+        res.status(500).json(net.getErrorResponse(error.INTERNAL_DATABASE_ERROR));
     });
 };
 
@@ -42,12 +43,12 @@ exports.get = (req, res) => {
     console.log(`API GET request called for ${req.params.email}`);
 
     if (!req.user || !req.isAuthenticated()) {
-        res.status(401).json(net.getErrorResponse("you are not authorized to make this request; please login"));
+        res.status(401).json(net.getErrorResponse(error.NO_USER_SESSION));
         return;
     }
 
     if (req.params.email !== req.user.email && req.user.role !== "admin") {
-        res.status(401).json(net.getErrorResponse("you are not authorized to make this request; must be your account or must be admin"));
+        res.status(401).json(net.getErrorResponse(error.USER_NOT_AUTHORIZED));
         return;
     }
     userDAO.getUser(req.params.email).then(function (user) {
@@ -56,11 +57,11 @@ exports.get = (req, res) => {
             res.json(net.getSuccessResponse(null, user));
         } else {
             console.log(`Failed to retrieve ${req.params.email} from database; User does not exist`);
-            res.status(404).json(net.getErrorResponse(`User with email ${req.params.email} not found`));
+            res.status(404).json(net.getErrorResponse(error.NO_ENTRY_FOUND));
         }
     }).catch(function (err) {
         console.log("error getting user: ", err);
-        res.status(500).json(net.getErrorResponse("error retrieving record from database"));
+        res.status(500).json(net.getErrorResponse(error.INTERNAL_DATABASE_ERROR));
     });
 };
 
@@ -68,12 +69,12 @@ exports.create = (req, res) => {
     console.log(`API POST request called for "create user"`);
 
     if (!req.user || !req.isAuthenticated()) {
-        res.status(401).json(net.getErrorResponse("you are not authorized to make this request; please login"));
+        res.status(401).json(net.getErrorResponse(error.NO_USER_SESSION));
         return;
     }
 
     if (req.user.role !== "admin") {
-        res.status(401).json(net.getErrorResponse("you are not authorized to make this request; must be admin"));
+        res.status(401).json(net.getErrorResponse(error.USER_NOT_AUTHORIZED));
         return;
     }
 
@@ -82,14 +83,14 @@ exports.create = (req, res) => {
     const keys = Object.keys(params);
 
     if (keys.length < required_fields.length) {
-        res.status(422).json(net.getErrorResponse("Insufficient parameters provided"));
+        res.status(422).json(net.getErrorResponse(error.INSUFFICIENT_FIELDS));
         return;
     }
 
     //name, email, password required
     for (let i = 0; i < required_fields.length; ++i) {
         if (!keys.includes(required_fields[i])) {
-            res.status(422).json(net.getErrorResponse(`'${required_fields[i]}' field is required`));
+            res.status(422).json(net.getErrorResponse(error.MISSING_FIELD.name, `'${required_fields[i]}' field is required`));
             return;
         }
     }
@@ -97,7 +98,7 @@ exports.create = (req, res) => {
     //check other fields allowed
     for (let i = 0; i < keys.length; ++i) {
         if (!allowed_fields.includes(keys[i])) {
-            res.status(422).json(net.getErrorResponse(`cannot set field '${keys[i]}' or does not exist`));
+            res.status(422).json(net.getErrorResponse(error.INVALID_FIELD.name, `cannot set field '${keys[i]}' or does not exist`));
             return;
         }
     }
@@ -108,10 +109,11 @@ exports.create = (req, res) => {
     }).catch(function (err) {
         if (err.name === "ValidationError") {
             console.error("Error Validating!", err);
-            res.status(422).json(net.getErrorResponse(err));
+            //todo: pass specific message of what field is not valid
+            res.status(422).json(net.getErrorResponse(error.VALIDATION_ERROR));
         } else {
             console.error(err);
-            res.status(500).json(net.getErrorResponse(err));
+            res.status(500).json(net.getErrorResponse(error.INTERNAL_DATABASE_ERROR));
         }
     });
 };
@@ -120,12 +122,12 @@ exports.update = (req, res) => {
     console.log(`API PUT request called for ${req.params.email}`);
 
     if (!req.user || !req.isAuthenticated()) {
-        res.status(401).json(net.getErrorResponse("you are not authorized to make this request; please login"));
+        res.status(401).json(net.getErrorResponse(error.NO_USER_SESSION));
         return;
     }
 
     if (req.params.email !== req.user.email && req.user.role !== "admin") {
-        res.status(401).json(net.getErrorResponse("you are not authorized to make this request; must be your account or must be admin"));
+        res.status(401).json(net.getErrorResponse(error.USER_NOT_AUTHORIZED));
         return;
     }
 
@@ -134,13 +136,13 @@ exports.update = (req, res) => {
     const keys = Object.keys(params);
 
     if (keys.length === 0) {
-        res.status(422).json(net.getErrorResponse("update request must include at least on parameter"));
+        res.status(422).json(net.getErrorResponse(error.INSUFFICIENT_FIELDS));
         return;
     }
 
     for (let i = 0; i < keys.length; ++i) {
         if (!allowed_fields.includes(keys[i])) {
-            res.status(422).json(net.getErrorResponse(`cannot update field '${keys[i]}' or does not exist`));
+            res.status(422).json(net.getErrorResponse(error.INVALID_FIELD.name, `cannot update field '${keys[i]}' or does not exist`));
             return;
         }
     }
@@ -156,10 +158,11 @@ exports.update = (req, res) => {
         console.error("failed to update record");
         if (err.name === "ValidationError") {
             console.error("Error Validating!", err);
-            res.status(422).json(net.getErrorResponse(err));
+            //todo: pass specific message of what field is not valid
+            res.status(422).json(net.getErrorResponse(error.VALIDATION_ERROR));
         } else {
             console.error(err);
-            res.status(500).json(net.getErrorResponse("failed to update record: " + err));
+            res.status(500).json(net.getErrorResponse(error.INTERNAL_DATABASE_ERROR));
         }
     });
 };
@@ -168,29 +171,30 @@ exports.delete = (req, res) => {
     console.log(`API DELETE request called for ${req.params.email}`);
 
     if (!req.user || !req.isAuthenticated()) {
-        res.status(401).json(net.getErrorResponse("you are not authorized to make this request; please login"));
+        res.status(401).json(net.getErrorResponse(error.NO_USER_SESSION));
         return;
     }
 
     if (req.params.email !== req.user.email && req.user.role !== "admin") {
-        res.status(401).json(net.getResponse(true , "you are not authorized to make this request; must be your account or must be admin"));
+        res.status(401).json(net.getResponse(true , error.USER_NOT_AUTHORIZED));
         return;
     }
 
     userDAO.deleteUser(req.params.email).then(function (result) {
         if (result.deletedCount === 0) {
             //fail
-            res.status(422).json(net.getErrorResponse("could not find record to remove for email: " + req.params.email));
+            //res.status(422).json(net.getErrorResponse("could not find record to remove for email: " + req.params.email));
+            res.status(404).json(net.getErrorResponse(error.NO_ENTRY_FOUND));
         } else if (result.deletedCount === 1) {
             //success
             res.json(net.getSuccessResponse("successfully removed record", req.params.email));
         } else {
             //critical error
-            res.status(500).json(net.getErrorResponse("critical server error"));
+            res.status(500).json(net.getErrorResponse(error.INTERNAL_DATABASE_ERROR));
         }
     }).catch(function (err) {
         console.log("failed to remove record: ", err);
-        res.status(500).json(net.getErrorResponse("failed to remove record from database"));
+        res.status(500).json(net.getErrorResponse(error.INTERNAL_DATABASE_ERROR));
     });
 };
 
@@ -198,14 +202,14 @@ exports.promote = (req, res) => {
     console.log(`API GET request called to promote ${req.params.email}`);
 
     if (!req.user || !req.isAuthenticated()) {
-        res.status(401).json(net.getErrorResponse("you are not authorized to make this request; please login"));
+        res.status(401).json(net.getErrorResponse(error.NO_USER_SESSION));
         return;
     }
 
     //todo: only admin can demote
 
     if (permission_levels[req.params.role] > permission_levels[req.user.role]) {
-        res.status(401).json(net.getErrorResponse("you are not authorized to make this request; cannot promote to that level"));
+        res.status(401).json(net.getErrorResponse(error.USER_NOT_AUTHORIZED));
         return;
     }
 
@@ -216,10 +220,11 @@ exports.promote = (req, res) => {
         console.log("failed to update record");
         if (err.name === "ValidationError") {
             console.error("Error Validating!", err);
-            res.status(422).json(net.getErrorResponse(err));
+            //todo: pass specific message of what field is not valid
+            res.status(422).json(net.getErrorResponse(error.VALIDATION_ERROR));
         } else {
             console.error(err);
-            res.status(500).json(net.getErrorResponse(err, "failed to update record"));
+            res.status(500).json(net.getErrorResponse(error.INTERNAL_DATABASE_ERROR));
         }
     });
 
