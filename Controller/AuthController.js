@@ -1,6 +1,7 @@
 const userDAO = require("../DAO/UserDAO");
 const User = require("../Model/User.js").Model;
 const net = require("../Util/Net");
+const error = require("../Util/Error");
 
 const passport = require("passport");
 
@@ -18,14 +19,14 @@ exports.signup = (req, res) => {
     const keys = Object.keys(params);
 
     if (keys.length < required_fields.length) {
-        res.status(422).json(net.getErrorResponse("Insufficient parameters provided"));
+        res.status(422).json(net.getErrorResponse(error.INSUFFICIENT_FIELDS));
         return;
     }
 
     //name, username, password required
     for (let i = 0; i < required_fields.length; ++i) {
         if (!keys.includes(required_fields[i])) {
-            res.status(422).json(net.getErrorResponse(`'${required_fields[i]}' field is required`));
+            res.status(422).json(net.getErrorResponse(error.MISSING_FIELD.name, `'${required_fields[i]}' field is required`));
             return;
         }
     }
@@ -33,7 +34,7 @@ exports.signup = (req, res) => {
     //check other fields allowed
     for (let i = 0; i < keys.length; ++i) {
         if (!allowed_fields.includes(keys[i])) {
-            res.status(422).json(net.getErrorResponse(`cannot set field '${keys[i]}' or does not exist`));
+            res.status(422).json(net.getErrorResponse(error.INVALID_FIELD.name, `cannot set field '${keys[i]}' or does not exist`));
             return;
         }
     }
@@ -44,10 +45,11 @@ exports.signup = (req, res) => {
     }).catch(function(err) {
         if (err.name === "ValidationError") {
             console.error("Error Validating!", err);
-            res.status(422).json(net.getErrorResponse(err));
+            //todo: pass specific message of what field is not valid
+            res.status(422).json(net.getErrorResponse(error.VALIDATION_ERROR));
         } else {
             console.error(err);
-            res.status(500).json(net.getErrorResponse(err));
+            res.status(500).json(net.getErrorResponse(error.INTERNAL_DATABASE_ERROR));
         }
     });
 };
@@ -55,24 +57,25 @@ exports.signup = (req, res) => {
 exports.login = (req, res, next) => {
     console.log("API POST request called for /auth/login");
 
+    //todo: use passport-local-mongoose errors
     passport.authenticate('local', function(err, user, info) {
         console.log(user);
         if (err) {
             console.error(err);
-            res.status(500).json(net.getErrorResponse(err));
+            res.status(500).json(net.getErrorResponse("error", err));
             return;
         }
         if (!user) {
-            res.status(403).json(net.getErrorResponse("user not found"));
+            res.status(403).json(net.getErrorResponse({name: "UserNotFound", message: "user not found"}));
             return;
         }
         req.logIn(user, function(err) {
             if (err) {
                 console.error(err);
-                res.status(500).json(net.getErrorResponse(err));
+                res.status(500).json(net.getErrorResponse("error", err));
                 return;
             }
-            res.json(net.getSuccessResponse("successful login", user))
+            res.json(net.getSuccessResponse("successful login", user));
         });
     })(req, res, next);
 };

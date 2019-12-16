@@ -4,6 +4,8 @@
 
 This package will run the database and authentication system behind the Gatorloop website. Built on Express.js and MongoDB.
 
+Want to know who we are and what we do at Gatorloop? Check us out at [https://gatorloop.com](https://gatorloop.com/)!
+
 ## Development
 
 Want to contribute to the project or test things out?
@@ -53,9 +55,26 @@ Upon each API call, the server will return a JSON object with the following form
 ```
 {
     "success": false,
-    "error": String
+    "error": {
+        name: String (see table below)
+        message: String (details)  
+    }
 }
 ```
+
+| Error Name            | Message                                                   |
+| ---                   | ---                                                       |
+| InvalidField          | Field is not in set of allowed fields.                    |
+| InvalidValueType      | Value is not the correct type (string, number, etc).      |
+| InvalidPartsObject    | Parts object is not valid.                                |
+| InsufficientFields    | Request does not have sufficient number of parameters.    |
+| MissingField          | A required parameter was not sent in the request.         |
+| DuplicateValue        | Value already exists in the database.                     |
+| InternalDatabaseError | Error occurred out of control of requester (check logs).  |
+| ValidationError       | Data does not meet database validation criteria.          |
+| NoEntryFound          | No entry found for specified identifier.                  |
+| NoUserSession         | No user is logged in.                                     |
+| UserNotAuthorized     | User does not have permission to make that request.       |
 
 ### User
 
@@ -152,6 +171,8 @@ New PO JSON Object
 | priority      | Enum (Number) | no       |
 | comment       | String        | no       |
 | total_price   | Number        | no       |
+
+Parts JSON must be valid according to Schema found below.
 
 ##### Return Data
 
@@ -263,20 +284,27 @@ Each type of object stored in the database is defined by a schema (like a bluepr
 
 #### Part
 
-Subset of Purchase Order Schema.
+Subset of Purchase Order Schema. All fields must be specified. Types must also be as specified below.
 
 ```
 {
     url: String,
     vendor: String,
     price: Number,
-    quantity: Number
+    quantity: Number,
+    subtotal: Number
 }
 ```
+
+## Testing
+- The .postman_collection.json file in the root directory of the repository provides a test configuration for each API endpoint that can be imported into [Postman](https://www.getpostman.com/).
+- More testing coming soon!
 
 ## License
 
 Copyright (C) 2019, Gatorloop Team, University of Florida. All Rights Reserved.
+
+Contact us at [https://gatorloop.com](https://gatorloop.com/)!
 
 ## TODO
 - ~~standardize json responses~~
@@ -284,26 +312,31 @@ Copyright (C) 2019, Gatorloop Team, University of Florida. All Rights Reserved.
 - ~~refactor update and create PO to include all changable fields~~
 - ~~hash passwords (passport-local-mongoose)~~
 - ~~persistent sessions with database~~
+- specify error.name and error.message
+- move http status code to error obj (always return 200 for actual http request?)
+- max length of all fields
 - ensure no data is leaked by api response (re: update, login methods return objects with all fields);
     configure deserialize to only select certain fields?
-- validate parts json
+- ~~validate parts json~~
 - implement array of po numbers in User schema
 - update status route for PO
 - only admin can demote logic
 - determine deadline type in PO schema
 - add change password endpoint
-
-- initialize counters dynamically
+- handle case when po number counter not initialized
+***
+- initialize counters dynamically (setup script?)
+- add more configurable parameters
 - ensure proper permissions for each request
 - update documentation for returned data (per endpoint)
 - improve console logging
-
+***
 - confirm permissions/schemas
 - email notification system
 - module for generating pdf/excel spreadsheet
-
+***
 - attach frontend
-- reset password
-- confirm email
+- reset password functionality (must have email system done first)
+- confirm email functionality
 - unit testing!!
 - UF SAML??
