@@ -55,9 +55,26 @@ Upon each API call, the server will return a JSON object with the following form
 ```
 {
     "success": false,
-    "error": String
+    "error": {
+        name: String (see table below)
+        message: String (details)  
+    }
 }
 ```
+
+| Error Name            | Message                                                   |
+| ---                   | ---                                                       |
+| InvalidField          | Field is not in set of allowed fields.                    |
+| InvalidValueType      | Value is not the correct type (string, number, etc).      |
+| InvalidPartsObject    | Parts object is not valid.                                |
+| InsufficientFields    | Request does not have sufficient number of parameters.    |
+| MissingField          | A required parameter was not sent in the request.         |
+| DuplicateValue        | Value already exists in the database.                     |
+| InternalDatabaseError | Error occurred out of control of requester (check logs).  |
+| ValidationError       | Data does not meet database validation criteria.          |
+| NoEntryFound          | No entry found for specified identifier.                  |
+| NoUserSession         | No user is logged in.                                     |
+| UserNotAuthorized     | User does not have permission to make that request.       |
 
 ### User
 

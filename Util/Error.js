@@ -9,7 +9,7 @@ exports.INVALID_VALUE_TYPE = {
 };
 exports.INVALID_PARTS_OBJECT = {
     name: "InvalidPartsObject",
-    message: "Parts object is not valid"
+    message: "Parts object is not valid."
 };
 exports.INSUFFICIENT_FIELDS = {
     name: "InsufficientFields",
@@ -35,13 +35,13 @@ exports.VALIDATION_ERROR = {
 };
 exports.NO_ENTRY_FOUND = {
     name: "NoEntryFound",
-    message: "No entry found for specified indentifier."
+    message: "No entry found for specified identifier."
 };
 
 //permissions
 exports.NO_USER_SESSION = {
     name: "NoUserSession",
-    message: "No user is logged in"
+    message: "No user is logged in."
 };
 exports.USER_NOT_AUTHORIZED = {
     name: "UserNotAuthorized",
