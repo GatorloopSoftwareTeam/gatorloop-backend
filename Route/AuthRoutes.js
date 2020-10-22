@@ -16,7 +16,7 @@ router.get("/logout", authController.logout);
 //is this needed 
 router.get("/status", function (req, res) {
     if (req.isAuthenticated()) {
-        res.json({status: "success", data: {email: req.user.email, role: req.user.role, subteam: req.user.subteam}});
+        res.json({status: "success", data: {name: req.user.name, email: req.user.email, role: req.user.role, subteam: req.user.subteam}});
     } else {
         res.json({status: "fail", error: "no current user logged in"});
     }

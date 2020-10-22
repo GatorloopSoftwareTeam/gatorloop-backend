@@ -312,7 +312,8 @@ Contact us at [https://gatorloop.com](https://gatorloop.com/)!
 - ~~refactor update and create PO to include all changable fields~~
 - ~~hash passwords (passport-local-mongoose)~~
 - ~~persistent sessions with database~~
-- specify error.name and error.message
+- ~~specify error.name and error.message~~
+- add approved field to PO
 - move http status code to error obj (always return 200 for actual http request?)
 - max length of all fields
 - ensure no data is leaked by api response (re: update, login methods return objects with all fields);
@@ -335,7 +336,6 @@ Contact us at [https://gatorloop.com](https://gatorloop.com/)!
 - email notification system
 - module for generating pdf/excel spreadsheet
 ***
-- attach frontend
 - reset password functionality (must have email system done first)
 - confirm email functionality
 - unit testing!!
